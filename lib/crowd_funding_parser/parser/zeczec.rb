@@ -2,7 +2,7 @@ require 'open-uri'
 
 module CrowdFundingParser
   module Parser
-    class Zeczec < CrowdFundTracker::Parser::General
+    class Zeczec < General
       def initialize
         @url = "https://www.zeczec.com"
         @target = open(@url + "/categories")
@@ -64,7 +64,13 @@ module CrowdFundingParser
       end
 
       def get_status(last_time)
-        last_time.match("前") ? "finished" : "online"
+        if last_time.match("前")
+          "finished"
+        elsif last_time.match("開始")
+          "preparing"
+        else
+          "online"
+        end
       end
 
       def get_fb_count(doc)

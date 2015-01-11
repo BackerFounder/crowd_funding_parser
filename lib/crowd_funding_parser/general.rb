@@ -1,4 +1,4 @@
-module CrowdFundTracker
+module CrowdFundingParser
   module Parser
     class General
       def get_string(elements)

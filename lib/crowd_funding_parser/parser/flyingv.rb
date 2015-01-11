@@ -2,7 +2,7 @@ require 'open-uri'
 
 module CrowdFundingParser
   module Parser
-    class Flyingv < CrowdFundTracker::Parser::General
+    class Flyingv < General
       def initialize(status = "online")
         @url = "https://www.flyingv.cc"
         @target = open(@url + "/type/#{status}")
@@ -57,10 +57,9 @@ module CrowdFundingParser
       end
 
       def get_status(last_time)
-        case last_time
-        when match("已結束")
+        if last_time.match("已結束")
           "finished"
-        when match("開始募資")
+        elsif last_time.match("開始")
           "preparing"
         else
           "online"

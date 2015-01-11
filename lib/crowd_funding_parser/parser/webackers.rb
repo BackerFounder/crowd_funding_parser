@@ -59,7 +59,13 @@ module CrowdFundingParser
       end
 
       def get_status(last_time)
-        last_time.match("已結束") ? "finished" : "online"
+        if last_time.match("已結束")
+          "finished"
+        elsif last_time.match("開始")
+          "preparing"
+        else
+          "online"
+        end
       end
 
       def get_fb_count(doc)
