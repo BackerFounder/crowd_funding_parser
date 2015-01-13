@@ -5,8 +5,9 @@ module CrowdFundingParser
     class Zeczec < General
       def initialize
         @url = "https://www.zeczec.com"
-        @target = open(@url + "/categories")
-        @item_css_class    = ".project-list .span4"
+        @targets = [open(@url + "/categories")]
+        @item_css_class = ".project-list .span4"
+        @status_css_class = ".meta span:nth-child(2)"
       end
 
       def get_id(rel_url)
@@ -64,7 +65,7 @@ module CrowdFundingParser
       end
 
       def get_status(last_time)
-        if last_time.match("前")
+        if last_time.match("前") || last_time.match("達成")
           "finished"
         elsif last_time.match("開始")
           "preparing"

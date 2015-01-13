@@ -3,10 +3,18 @@ require 'open-uri'
 module CrowdFundingParser
   module Parser
     class Flyingv < General
-      def initialize(status = "online")
+      def initialize(*cat)
+        categories = cat.empty? ? ["designgoods", "media", "stageplay", "entertainment", "publish", "society", "technology", "food", "travel"] : cat
         @url = "https://www.flyingv.cc"
-        @target = open(@url + "/type/#{status}")
-        @item_css_class    = ".portfolio-item"
+        @targets = []
+
+        categories.each do |category|
+          category_url = @url + "/category/#{category}"
+          @targets << open(category_url)
+        end
+
+        @item_css_class = ".portfolio-item"
+        @status_css_class = ".unit-time"
       end
 
       # for project's info

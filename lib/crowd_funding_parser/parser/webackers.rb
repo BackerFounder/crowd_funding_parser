@@ -3,10 +3,18 @@ require 'open-uri'
 module CrowdFundingParser
   module Parser
     class Webackers < General
-      def initialize(status = "online")
+      def initialize(*cat)
+        categories = cat.empty? ? ["ART", "PUBLICATION", "MUSIC", "DESIGN", "TECHNOLOGY", "ACG", "SURPRISE", "CHARITY", "VIDEO"] : cat
         @url = "http://www.webackers.com"
-        @target = open(@url + "/Proposal/Browse?queryType=ALL&fundedStatus=#{status.upcase}&category=ALL")
-        @item_css_class    = ".cbp-item .thumbnail"
+        @targets = []
+
+        categories.each do |category|
+          category_url = @url + "/Proposal/Browse?queryType=ALL&fundedStatus=ALL&category=#{category}"
+          @targets << open(category_url)
+        end
+
+        @item_css_class = ".cbp-item"
+        @status_css_class = "li.timeitem"
       end
 
       # for project's info
@@ -59,7 +67,7 @@ module CrowdFundingParser
       end
 
       def get_status(last_time)
-        if last_time.match("已結束")
+        if last_time.match("已結束") || last_time.match("已完成")
           "finished"
         elsif last_time.match("開始")
           "preparing"
