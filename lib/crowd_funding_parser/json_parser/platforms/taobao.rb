@@ -20,6 +20,20 @@ module CrowdFundingParser
         project
       end
 
+      def parse_content_data(json)
+        main_url = "http://hi.taobao.com/market/hi/detail2014.php?id="
+        project = Hash.new
+        project['platform_project_id'] = json["id"]
+        project['title']         = json["name"]
+        project['url']           = main_url + project["platform_project_id"]
+        project['summary']       = ""
+        project['category']      = get_category(json["category_id"])
+        project['creator_name']  = ""
+        project['creator_id']    = ""
+        project['creator_link']  = ""
+        project
+      end
+
       def get_total_urls(status = 1)
         page_count = get_total_page(status)
         total_urls = []
@@ -50,6 +64,8 @@ module CrowdFundingParser
         page_count = json["pageTotal"]
       end
 
+      private
+
       def turn_url_to_json(url)
         open_url = open(url)
         json = JSON.load(open_url)
@@ -65,6 +81,10 @@ module CrowdFundingParser
         else
           "online"
         end
+      end
+
+      def get_category(id)
+        
       end
     end
   end
