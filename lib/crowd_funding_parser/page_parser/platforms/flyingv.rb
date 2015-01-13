@@ -1,7 +1,7 @@
 require 'open-uri'
 
 module CrowdFundingParser
-  module Parser
+  module PageParser
     class Flyingv < General
       def initialize(*cat)
         categories = cat.empty? ? ["designgoods", "media", "stageplay", "entertainment", "publish", "society", "technology", "food", "travel"] : cat

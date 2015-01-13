@@ -1,5 +1,5 @@
 module CrowdFundingParser
-  module Parser
+  module PageParser
     class General
       def parse_tracking_data(doc, rel_url)
         project_url = @url + rel_url

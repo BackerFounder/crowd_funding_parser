@@ -1,7 +1,7 @@
 require 'open-uri'
 
 module CrowdFundingParser
-  module Parser
+  module PageParser
     class Zeczec < General
       def initialize
         @url = "https://www.zeczec.com"

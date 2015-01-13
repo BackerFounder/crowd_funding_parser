@@ -1,7 +1,7 @@
 require 'open-uri'
 
 module CrowdFundingParser
-  module Parser
+  module PageParser
     class Webackers < General
       def initialize(*cat)
         categories = cat.empty? ? ["ART", "PUBLICATION", "MUSIC", "DESIGN", "TECHNOLOGY", "ACG", "SURPRISE", "CHARITY", "VIDEO"] : cat
