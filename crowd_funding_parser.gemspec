@@ -6,9 +6,9 @@ require 'crowd_funding_parser/version'
 Gem::Specification.new do |spec|
   spec.name          = "crowd_funding_parser"
   spec.version       = CrowdFundingParser::VERSION
-  spec.authors       = ["Stan Low"]
-  spec.email         = ["a22301613@yahoo.com.tw"]
-  spec.summary       = %q{A crowd-funding projects tracker}
+  spec.authors       = ["BackerFounder"]
+  spec.email         = ["hello@backer-founder.com"]
+  spec.summary       = %q{A crowd-funding platform parser}
   # spec.description   = %q{TODO: Write a longer description. Optional.}
   spec.homepage      = ""
   spec.license       = "MIT"
