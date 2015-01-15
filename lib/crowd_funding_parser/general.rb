@@ -37,7 +37,7 @@ module CrowdFundingParser
           Parallel.map(online_projects, in_processes: 2 , in_threads: 4) do |project|
             link_nodes = project.css("a:nth-child(1)")
             status = get_status(get_string(project.css(@status_css_class)))
-            link = link_nodes.first["href"]
+            link = @url + link_nodes.first["href"]
             if status == "finished" && required_status == "finished"
               links << link
             elsif status == "online" && required_status == "online"

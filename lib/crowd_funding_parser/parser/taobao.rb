@@ -1,6 +1,5 @@
 require "json"
 require 'open-uri'
-require 'watir'
 
 module CrowdFundingParser
   module Parser
@@ -74,71 +73,68 @@ module CrowdFundingParser
         "http://hstar-hi.alicdn.com/dream/ajax/getProjectList.htm?page=#{page}&pageSize=20&projectType=&type=6&status=#{status}"
       end
 
+      # get data info
+
       def get_id(project_url)
         project_url.split("id=").last
       end
 
-      def get_title(doc)
-        get_string(doc.css(".project-title h1"))
+      def get_title(result)
+        result["data"]["name"]
       end
 
-      def get_category(doc)
-        
+      def get_category(result)
+
       end
 
-      def get_creator_name(doc)
-        get_string(doc.css("span.sponsor-name"))
+      def get_creator_name(result)
+        result["data"]["person"]["name"]
       end
 
-      def get_creator_id(doc)
-        # doc.css(".page-title-wrapper").css(".pageDes")[1].css("a").first["href"].split("/").last
+      def get_creator_id(result)
+        # json.css(".page-title-wrapper").css(".pageDes")[1].css("a").first["href"].split("/").last
       end
 
-      def get_creator_link(doc)
-        # @url + doc.css(".profilemeta .imp a").first["href"]
+      def get_creator_link(result)
+        # @url + json.css(".profilemeta .imp a").first["href"]
       end
 
-      def get_summary(doc)
-        summarize_project_content(get_string(doc.css("#J_Desc")))
+      def get_summary(result)
+        result["data"]["desc"]
       end
 
       # for tracking
 
-      def get_money_goal(doc)
-        money_string(get_string(doc.css(".target-money em")))
+      def get_money_goal(result)
+        result["data"]["target-money"]
       end
 
-      def get_money_pledged(doc)
-        money_string(get_string(doc.css(".current-money")))
+      def get_money_pledged(result)
+        result["data"]["curr-money"]
       end
 
-      def get_backer_count(doc)
-        get_string(doc.css(".projects-schedule-data .data-number:nth-child(1)"))
+      def get_backer_count(result)
+        result["data"]["support_person"]
       end
 
-      def get_last_time(doc)
-        get_string(doc.css(".projects-schedule-data .data-number:nth-child(2)"))
+      def get_last_time(result)
+        result["data"]["plan_end_days"]
       end
 
-      def get_status(doc)
-        status = get_string(doc.css("a.reserve-btn.J_ReserveBtn"))
-        if status.match("我要支持")
-          "online"
-        elsif status.match("筹款结束") || status.match("项目成功")
+      def get_status(last_time)
+        if last_time == "0"
           "finished"
-        elsif status.match("我喜欢")
-          "preparing"
         else
           "online"
         end
       end
 
-      def get_fb_count(doc)
+      def get_fb_count(result)
         
       end
 
-      def get_following_count(doc)
-        get_string(doc.css("span.J_LikeNum"))
+      def get_following_count(result)
+        result["data"]["focus_count"]
       end
 
       def get_backer_list(project_url)
