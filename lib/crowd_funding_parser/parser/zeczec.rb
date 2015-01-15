@@ -10,10 +10,6 @@ module CrowdFundingParser
         @status_css_class = ".meta span:nth-child(2)"
       end
 
-      def get_id(rel_url)
-        rel_url.split("/").last
-      end
-
       def get_title(doc)
         get_string(doc.css("a.project-title"))
       end

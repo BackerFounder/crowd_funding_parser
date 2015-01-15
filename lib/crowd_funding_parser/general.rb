@@ -1,8 +1,7 @@
 module CrowdFundingParser
   module Parser
     class General
-      def parse_tracking_data(doc, rel_url)
-        project_url = @url + rel_url
+      def parse_tracking_data(doc, project_url)
         project = Hash.new
         project['money_goal']      = get_money_goal(doc).to_i
         project['money_pledged']   = get_money_pledged(doc).to_i
@@ -15,10 +14,9 @@ module CrowdFundingParser
         project
       end
 
-      def parse_content_data(doc, rel_url)
-        project_url = @url + rel_url
+      def parse_content_data(doc, project_url)
         project                  = Hash.new
-        project['platform_project_id'] = get_id(rel_url)
+        project['platform_project_id'] = get_id(project_url)
         project['title']         = get_title(doc)
         project['url']           = project_url
         project['summary']       = get_summary(doc)
@@ -53,27 +51,21 @@ module CrowdFundingParser
         links
       end
 
-      def get_project_log(url)
-        url.gsub!("#{@url}", "")
-        parse_tracking_data(url)
-      end
-
-      def get_project_content(url)
-        url.gsub!("#{@url}", "")
-        parse_content_data(url)
-      end
-
-      def get_full_project(url)
-        get_project_content(url).merge(get_project_log(url))
-      end
-
-      def get_doc_through_url(rel_url)
-        project_url = @url + rel_url
+      def get_doc_through_url(project_url)
         project_html = open(project_url)
         Nokogiri::HTML(project_html)
       end
 
       private
+
+      def get_id(project_url)
+        rel_url = get_rel_url(project_url)
+        rel_url.split("/").last
+      end
+
+      def get_rel_url(url)
+        url.gsub!("#{@url}", "")
+      end
 
       def get_string(elements)
         elements.first.text.strip
@@ -89,6 +81,7 @@ module CrowdFundingParser
         minutes = ((left_time / 60) % 60).to_i
         "#{days}天#{hours}小時#{minutes}分鐘"
       end
+
     end
   end
 end

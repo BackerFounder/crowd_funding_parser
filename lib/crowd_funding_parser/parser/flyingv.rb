@@ -18,9 +18,6 @@ module CrowdFundingParser
       end
 
       # for project's info
-      def get_id(rel_url)
-        rel_url.split("/").last
-      end
 
       def get_title(doc)
         get_string(doc.css(".page-title-wrapper").css(".pagesTitle"))
