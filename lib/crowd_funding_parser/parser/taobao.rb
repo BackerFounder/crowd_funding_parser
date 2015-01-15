@@ -124,14 +124,19 @@ module CrowdFundingParser
         result["data"]["remain_day"]
       end
 
-      def get_status(result)
-        if result["remain_day"] == "0" && result["plan_end_days"] == ["0"]
+      def get_status(last_time)
+        if last_time == "0"
           "finished"
-        elsif result["plan_end_days"] != ["0"]
-          "preparing"
         else
           "online"
         end
+        # if result["remain_day"] == "0" && result["plan_end_days"] == ["0"]
+        #   "finished"
+        # elsif result["plan_end_days"] != ["0"]
+        #   "preparing"
+        # else
+        #   "online"
+        # end
       end
 
       def get_fb_count(result)

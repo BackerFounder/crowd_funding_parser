@@ -60,8 +60,7 @@ module CrowdFundingParser
         money_string(get_string(doc.css(".sidebar .row-fluid .span6:nth-child(1) h3.num")))
       end
 
-      def get_status(doc)
-        last_time = get_last_time(doc)
+      def get_status(last_time)
         if last_time.match("前") || last_time.match("達成")
           "finished"
         elsif last_time.match("開始")
