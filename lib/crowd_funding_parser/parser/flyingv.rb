@@ -61,7 +61,8 @@ module CrowdFundingParser
         get_string(doc.css(".countdes .dt div:nth-child(2)")).sub("剩餘", "")
       end
 
-      def get_status(last_time)
+      def get_status(doc)
+        last_time = get_last_time(doc)
         if last_time.match("已結束")
           "finished"
         elsif last_time.match("開始")

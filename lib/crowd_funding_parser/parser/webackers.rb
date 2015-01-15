@@ -63,7 +63,8 @@ module CrowdFundingParser
         last_seconds <= 0 ? "已結束" : convert_time(last_seconds)
       end
 
-      def get_status(last_time)
+      def get_status(doc)
+        last_time = get_last_time(doc)
         if last_time.match("已結束") || last_time.match("已完成")
           "finished"
         elsif last_time.match("開始")

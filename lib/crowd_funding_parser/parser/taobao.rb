@@ -1,5 +1,6 @@
 require "json"
 require 'open-uri'
+require "iconv"
 
 module CrowdFundingParser
   module Parser
@@ -88,7 +89,8 @@ module CrowdFundingParser
       end
 
       def get_creator_name(result)
-        result["data"]["person"]["name"]
+        raw_creator_name = result["data"]["person"]["name"]
+        encode_gbk_to_utf(raw_creator_name)
       end
 
       def get_creator_id(result)
@@ -100,7 +102,8 @@ module CrowdFundingParser
       end
 
       def get_summary(result)
-        result["data"]["desc"]
+        raw_summary = result["data"]["desc"]
+        encode_gbk_to_utf(raw_summary)
       end
 
       # for tracking
@@ -118,12 +121,14 @@ module CrowdFundingParser
       end
 
       def get_last_time(result)
-        result["data"]["plan_end_days"]
+        result["data"]["remain_day"]
       end
 
-      def get_status(last_time)
-        if last_time == "0"
+      def get_status(result)
+        if result["remain_day"] == "0" && result["plan_end_days"] == ["0"]
           "finished"
+        elsif result["plan_end_days"] != ["0"]
+          "preparing"
         else
           "online"
         end
@@ -139,6 +144,15 @@ module CrowdFundingParser
 
       def get_backer_list(project_url)
         []
+      end
+
+      def encode_gbk_to_utf(string)
+        begin
+          Iconv.conv("utf-8//ignore", "gb2312//ignore", string)
+        rescue Exception => e
+          puts e
+          string
+        end
       end
     end
   end
