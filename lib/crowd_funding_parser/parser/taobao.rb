@@ -1,6 +1,8 @@
 require "json"
+require 'open-uri'
+
 module CrowdFundingParser
-  module JsonParser
+  module Parser
     class Taobao < General
       def initialize
         # status: 成功 = 2, 募資中 = 1, 預熱中 = 3
@@ -21,44 +23,44 @@ module CrowdFundingParser
       end
 
       def get_total_jsons(status = 1)
-        urls = get_total_urls(status)
+        urls = get_total_json_apis(status)
         jsons = []
         urls.each do |url|
-          page_json = turn_url_to_json(url)
+          page_json = get_json_through_url(url)
           json = page_json["data"]
           jsons += json
         end
         jsons
       end
 
-      def get_total_urls(status = 1)
+      def get_total_json_apis(status = 1)
         page_count = get_total_page(status)
         total_urls = []
         page_count.to_i.times do |i|
-          total_urls << get_workable_url(i + 1, status)
+          total_urls << get_workable_json_api(i + 1, status)
         end
         total_urls
       end
 
       def get_total_page(status = 1)
         url = "http://hstar-hi.alicdn.com/dream/ajax/getProjectList.htm?page=1&pageSize=20&projectType=&type=6&status=#{status}"
-        json = turn_url_to_json(url)
+        json = get_json_through_url(url)
         page_count = json["pageTotal"]
       end
 
-      def get_workable_url(page = 1, status = 1)
+      def get_workable_json_api(page = 1, status = 1)
         "http://hstar-hi.alicdn.com/dream/ajax/getProjectList.htm?page=#{page}&pageSize=20&projectType=&type=6&status=#{status}"
       end
 
       private
 
-      def turn_url_to_json(url)
-        open_url = open(url)
+      def get_json_through_url(project_url)
+        open_url = open(project_url)
         json = JSON.load(open_url)
       end
 
       def get_title(doc)
-        get_string(doc.css(".page-title-wrapper").css(".pagesTitle"))
+        get_string(doc.css(".project-title", "h1"))
       end
 
       def get_category(doc)

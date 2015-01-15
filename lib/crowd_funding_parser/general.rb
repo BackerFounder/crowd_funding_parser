@@ -64,7 +64,7 @@ module CrowdFundingParser
       end
 
       def get_rel_url(url)
-        url.gsub!("#{@url}", "")
+        url.gsub("#{@url}", "")
       end
 
       def get_string(elements)
