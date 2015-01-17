@@ -28,15 +28,13 @@ module CrowdFundingParser
 
       def get_project_links(status = "online")
         status_code = get_status_code(status)
-        @jsons = get_total_jsons
+        @jsons = get_total_jsons(status_code)
         @jsons.flatten!
         @jsons.compact!
         links = []
         Parallel.each(@jsons, in_precesses: 2, in_threads: 5) do |json|
-          if json["state"] == status_code
-            project_url = json["urls"]["web"]["project"]
-            links << project_url
-          end
+          project_url = json["urls"]["web"]["project"]
+          links << project_url
         end
         links
       end
@@ -45,26 +43,23 @@ module CrowdFundingParser
         case status
         when "online"
           "live"
-        when "preparing"
-          3
         when "finished"
           "successful"
         else
-          1
+          "live"
         end
       end
 
-      def get_total_jsons
+      def get_total_jsons(status_code)
         jsons = []
 
         Parallel.each(1..210, in_precesses: 2, in_threads: 5) do |i|
           begin
-            api_url = get_projects_page_api(i)
+            api_url = get_projects_page_api(i, status_code)
             json = get_json_through_url(api_url)["projects"]
             jsons << json
           rescue Exception => e
             puts e
-            return false
           end
         end
         jsons
@@ -72,8 +67,8 @@ module CrowdFundingParser
 
       private
 
-      def get_projects_page_api(page = 1)
-        "https://www.kickstarter.com/projects/search.json?search=&page=#{page}"
+      def get_projects_page_api(page = 1, status_code)
+        "https://www.kickstarter.com/projects/search.json?search=&page=#{page}&state=#{status_code}"
       end
 
       def get_project_search_result_api(name)
