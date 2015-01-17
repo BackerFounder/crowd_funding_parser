@@ -11,11 +11,19 @@ module CrowdFundingParser
       end
 
       def get_result(project_url)
-        result = []
-        Parallel.each(@jsons, in_precesses: 2, in_threads: 5) do |json|
-          result << json if json["urls"]["web"]["project"] == project_url
+        if @jsons.present?
+          result = []
+          Parallel.each(@jsons, in_precesses: 2, in_threads: 5) do |json|
+            result << json if json["urls"]["web"]["project"] == project_url
+          end
+          result.first
+        else
+          project_name = project_url.split("/").last.split("?").first
+          projects_api = get_project_search_result_api(project_name)
+          if json = get_json_through_url(projects_api)
+            result = json["projects"].first
+          end
         end
-        result.first
       end
 
       def get_project_links(status = "online")
@@ -68,58 +76,66 @@ module CrowdFundingParser
         "https://www.kickstarter.com/projects/search.json?search=&page=#{page}"
       end
 
+      def get_project_search_result_api(name)
+        "https://www.kickstarter.com/projects/search.json?term=#{name}"
+      end
+
       # get data info
 
       def get_id(project_url)
-        project_url.split("id=").last
+        project_url.split("/").last
       end
 
       def get_title(result)
-        result["data"]["name"]
+        result["name"]
       end
 
       def get_category(result)
-
+        result["category"]["name"]
       end
 
       def get_creator_name(result)
-        raw_creator_name = result["data"]["person"]["name"]
-        encode_gbk_to_utf(raw_creator_name)
+        result["creator"]["name"]
       end
 
       def get_creator_id(result)
-        # json.css(".page-title-wrapper").css(".pageDes")[1].css("a").first["href"].split("/").last
+        result["creator"]["id"]
       end
 
       def get_creator_link(result)
-        # @url + json.css(".profilemeta .imp a").first["href"]
+        result["creator"]["urls"]["web"]["user"]
       end
 
       def get_summary(result)
-        raw_summary = result["data"]["desc"]
-        encode_gbk_to_utf(raw_summary)
+        result["blurb"]
       end
 
       # for tracking
 
       def get_money_goal(result)
-        result["data"]["target-money"]
+        result["goal"]
       end
 
       def get_money_pledged(result)
-        result["data"]["curr-money"]
+        result["pledged"]
       end
 
       def get_backer_count(result)
-        result["data"]["support_person"]
+        result["backers_count"]
       end
 
       def get_last_time(result)
-        result["data"]["remain_day"]
+        last_seconds = result["deadline"].to_i - Time.now.to_i
+        last_day = last_seconds / 86400
+        if last_day <= 0
+          "已結束"
+        else
+          last_day.to_s + "天"
+        end
       end
 
       def get_status(last_time)
-        if last_time == "0"
+        if last_time == "已結束"
           "finished"
         else
           "online"
@@ -131,20 +147,11 @@ module CrowdFundingParser
       end
 
       def get_following_count(result)
-        result["data"]["focus_count"]
+        
       end
 
       def get_backer_list(project_url)
         []
-      end
-
-      def encode_gbk_to_utf(string)
-        begin
-          Iconv.conv("utf-8//ignore", "gb2312//ignore", string)
-        rescue Exception => e
-          puts e
-          string
-        end
       end
     end
   end
