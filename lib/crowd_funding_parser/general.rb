@@ -66,8 +66,14 @@ module CrowdFundingParser
       end
 
       def get_json_through_url(project_url)
-        open_url = open(project_url)
-        json = JSON.load(open_url)
+        begin
+          open_url = open(project_url)
+          json = JSON.load(open_url)
+        rescue Exception => e
+          puts e
+          puts project_url
+          {}
+        end
       end
 
       private
