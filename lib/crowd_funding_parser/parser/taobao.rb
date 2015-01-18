@@ -107,11 +107,11 @@ module CrowdFundingParser
       # for tracking
 
       def get_money_goal(result)
-        result["data"]["target-money"]
+        result["data"]["target_money"]
       end
 
       def get_money_pledged(result)
-        result["data"]["curr-money"]
+        result["data"]["curr_money"]
       end
 
       def get_backer_count(result)
