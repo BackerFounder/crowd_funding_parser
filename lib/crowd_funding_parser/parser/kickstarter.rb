@@ -18,7 +18,7 @@ module CrowdFundingParser
           end
           result.first
         else
-          project_name = get_project_name(project_url)
+          project_name = get_id(project_url)
           projects_api = get_project_search_result_api(project_name)
           if json = get_json_through_url(projects_api)
             result = json["projects"].first
@@ -75,14 +75,10 @@ module CrowdFundingParser
         end
       end
 
-      def get_project_name(project_url)
-        project_url.split("/").last.split("?").first
-      end
-
       # get data info
 
       def get_id(project_url)
-        project_url.split("/").last
+        project_url.split("/").last.split("?").first
       end
 
       def get_title(result)
