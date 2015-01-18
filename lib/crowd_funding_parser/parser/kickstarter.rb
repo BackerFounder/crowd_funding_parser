@@ -18,7 +18,7 @@ module CrowdFundingParser
           end
           result.first
         else
-          project_name = project_url.split("/").last.split("?").first
+          project_name = get_project_name(project_url)
           projects_api = get_project_search_result_api(project_name)
           if json = get_json_through_url(projects_api)
             result = json["projects"].first
@@ -39,15 +39,14 @@ module CrowdFundingParser
         links
       end
 
-      def get_status_code(status)
-        case status
-        when "online"
-          "live"
-        when "finished"
-          "successful"
-        else
-          "live"
-        end
+      private
+
+      def get_projects_page_api(page = 1, status_code)
+        "https://www.kickstarter.com/projects/search.json?search=&page=#{page}&state=#{status_code}"
+      end
+
+      def get_project_search_result_api(name)
+        "https://www.kickstarter.com/projects/search.json?term=#{name}"
       end
 
       def get_total_jsons(status_code)
@@ -65,14 +64,19 @@ module CrowdFundingParser
         jsons
       end
 
-      private
-
-      def get_projects_page_api(page = 1, status_code)
-        "https://www.kickstarter.com/projects/search.json?search=&page=#{page}&state=#{status_code}"
+      def get_status_code(status)
+        case status
+        when "online"
+          "live"
+        when "finished"
+          "successful"
+        else
+          "live"
+        end
       end
 
-      def get_project_search_result_api(name)
-        "https://www.kickstarter.com/projects/search.json?term=#{name}"
+      def get_project_name(project_url)
+        project_url.split("/").last.split("?").first
       end
 
       # get data info
