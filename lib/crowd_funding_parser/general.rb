@@ -23,6 +23,7 @@ module CrowdFundingParser
         project['creator_name']  = get_creator_name(result)
         project['creator_id']    = get_creator_id(result)
         project['creator_link']  = get_creator_link(result)
+        project['currency_string'] = get_currency_string(result)
         project
       end
 
@@ -105,7 +106,6 @@ module CrowdFundingParser
         minutes = ((left_time / 60) % 60).to_i
         "#{days}天#{hours}小時#{minutes}分鐘"
       end
-
     end
   end
 end

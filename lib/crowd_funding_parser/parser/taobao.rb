@@ -149,6 +149,10 @@ module CrowdFundingParser
         []
       end
 
+      def get_currency_string(result)
+        "cny"
+      end
+
       def encode_gbk_to_utf(string)
         begin
           Iconv.conv("utf-8//ignore", "gb2312//ignore", string)

@@ -85,6 +85,10 @@ module CrowdFundingParser
       def get_backer_list(project_url)
         []
       end
+
+      def get_currency_string(result)
+        "twd"
+      end
     end
   end
 end

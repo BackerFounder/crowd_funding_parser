@@ -194,6 +194,14 @@ module CrowdFundingParser
       def get_backer_list(project_url)
         []
       end
+
+      def get_currency_string(result)
+        if @parse_method == :doc
+          result.css("data[data-currency]")[0]["data-currency"]
+        else
+          result["currency"]
+        end
+      end
     end
   end
 end
