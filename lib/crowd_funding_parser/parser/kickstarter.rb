@@ -6,8 +6,9 @@ module CrowdFundingParser
   module Parser
     class Kickstarter < General
       def initialize
-        @parse_method = :json
+        @parse_method = :doc
         @jsons = []
+        @url = "https://www.kickstarter.com"
       end
 
       def get_result(project_url)
@@ -18,11 +19,7 @@ module CrowdFundingParser
           end
           result.first
         else
-          project_name = get_id(project_url)
-          projects_api = get_project_search_result_api(project_name)
-          if json = get_json_through_url(projects_api)
-            result = json["projects"].first
-          end
+          get_doc_through_url(project_url)
         end
       end
 
@@ -36,10 +33,15 @@ module CrowdFundingParser
           project_url = json["urls"]["web"]["project"]
           links << project_url
         end
+        @parse_method = :json
         links
       end
 
       private
+
+      def get_project_page_api(project_url)
+        project_url.split("?").first + ".json"
+      end
 
       def get_projects_page_api(page = 1, status_code)
         "https://www.kickstarter.com/projects/search.json?search=&page=#{page}&state=#{status_code}"
@@ -77,51 +79,95 @@ module CrowdFundingParser
 
       # get data info
 
-      def get_id(project_url)
-        project_url.split("/").last.split("?").first
-      end
+      # def get_id(project_url)
+      #   regex = /\/(\d{5,}+)\/([a-zA-z0-9-]+)/
+      #   regex.match(project_url)[2]
+      #   # project_url.split("/").last.split("?").first
+      # end
 
       def get_title(result)
-        result["name"]
+        if @parse_method == :doc
+          get_string(result.css(".NS_projects__header h2 .green-dark"))
+        else
+          result["name"]
+        end
       end
 
       def get_category(result)
-        result["category"]["name"]
+        if @parse_method == :doc
+          get_string(result.css(".container-flex .h5 a.grey-dark:nth-child(2) b"))
+        else
+          result["category"]["name"]
+        end
       end
 
       def get_creator_name(result)
-        result["creator"]["name"]
+        if @parse_method == :doc
+          get_string(result.css(".NS_projects__creator .col-8>h5 a.remote_modal_dialog"))
+        else
+          result["creator"]["name"]
+        end
       end
 
       def get_creator_id(result)
-        result["creator"]["id"]
+        if @parse_method == :doc
+          creator_link = result.css(".NS_projects__creator .col-8>h5 a.remote_modal_dialog").first["href"]
+          creator_link.split("/")[-3]
+        else
+          result["creator"]["id"]
+        end
       end
 
       def get_creator_link(result)
-        result["creator"]["urls"]["web"]["user"]
+        if @parse_method == :doc
+          creator_link = @url + result.css(".NS_projects__creator .col-8>h5 a.remote_modal_dialog").first["href"]
+        else
+          result["creator"]["urls"]["web"]["user"]
+        end
       end
 
       def get_summary(result)
-        result["blurb"]
+        if @parse_method == :doc
+          get_string(result.css(".container-flex .col-8 .mobile-hide p.h3.mb3"))
+        else
+          result["blurb"]
+        end
       end
 
       # for tracking
 
       def get_money_goal(result)
-        result["goal"]
+        if @parse_method == :doc
+          result.css("div[data-pledged]").first["data-goal"]
+        else
+          result["goal"]
+        end
       end
 
       def get_money_pledged(result)
-        result["pledged"]
+        if @parse_method == :doc
+          result.css("div[data-pledged]").first["data-pledged"]
+        else
+          result["pledged"]
+        end
       end
 
       def get_backer_count(result)
-        result["backers_count"]
+        if @parse_method == :doc
+          result.css("div[data-backers-count]").first["data-backers-count"]
+        else
+          result["backers_count"]
+        end
       end
 
       def get_last_time(result)
-        last_seconds = result["deadline"].to_i - Time.now.to_i
-        last_day = last_seconds / 86400
+        if @parse_method == :doc
+          end_date = result.css("div[data-end_time]").first["data-end_time"]
+          last_seconds = Time.parse(end_date) - Time.now
+        else
+          last_seconds = result["deadline"].to_i - Time.now.to_i
+        end
+        last_day = last_seconds.to_i / 86400
         if last_day <= 0
           "已結束"
         else

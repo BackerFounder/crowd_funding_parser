@@ -80,7 +80,7 @@ module CrowdFundingParser
 
       def get_id(project_url)
         rel_url = get_rel_url(project_url)
-        rel_url.split("/").last
+        rel_url.split("/").last.split("?").first
       end
 
       def summarize_project_content(string)
