@@ -6,6 +6,8 @@ module CrowdFundingParser
   module Parser
     class Kickstarter < General
       def initialize
+        # art = 1, comic = 3, game = 12,
+        @category_ids = [1, 3, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 26]
         @parse_method = :doc
         @jsons = []
         @url = "https://www.kickstarter.com"
@@ -23,9 +25,29 @@ module CrowdFundingParser
         end
       end
 
-      def get_project_links(status = "online")
+      def get_all_categories(status = "online")
         status_code = get_status_code(status)
         @jsons = get_total_jsons(status_code)
+        @jsons.flatten!
+        @jsons.compact!
+        categories = []
+        Parallel.each(@jsons, in_precesses: 2, in_threads: 5) do |json|
+          category = { id: json["category"]["id"], name: json["category"]["name"], parent_id: json["category"]["parent_id"]}
+          categories << category
+        end
+        categories.uniq
+      end
+
+      def get_main_categories(add_categories)
+        add_categories.select { |c| c[:parent_id].nil? }
+      end
+
+      def get_project_links(status = "online")
+        status_code = get_status_code(status)
+        @category_ids.each do |category_id|
+          category_jsons = get_total_jsons(status_code, category_id)
+          @jsons << category_jsons
+        end
         @jsons.flatten!
         @jsons.compact!
         links = []
@@ -43,24 +65,25 @@ module CrowdFundingParser
         project_url.split("?").first + ".json"
       end
 
-      def get_projects_page_api(page = 1, status_code)
-        "https://www.kickstarter.com/projects/search.json?search=&page=#{page}&state=#{status_code}"
+      def get_projects_page_api(page = 1, status_code = "live", category_id = 0)
+        "https://www.kickstarter.com/projects/search.json?page=#{page}&state=#{status_code}&category_id=#{category_id}"
       end
 
       def get_project_search_result_api(name)
         "https://www.kickstarter.com/projects/search.json?term=#{name}"
       end
 
-      def get_total_jsons(status_code)
+      def get_total_jsons(status_code = "live", category_id = 0)
         jsons = []
 
-        Parallel.each(1..210, in_precesses: 2, in_threads: 5) do |i|
+        Parallel.each(1..200, in_precesses: 2, in_threads: 5) do |i|
           begin
-            api_url = get_projects_page_api(i, status_code)
+            api_url = get_projects_page_api(i, status_code, category_id)
             json = get_json_through_url(api_url)["projects"]
             jsons << json
           rescue Exception => e
             puts e
+            Parallel::Stop
           end
         end
         jsons
