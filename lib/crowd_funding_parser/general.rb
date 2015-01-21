@@ -97,7 +97,7 @@ module CrowdFundingParser
       end
 
       def money_string(money)
-        money.sub('$', '').sub(',', '').sub('NT', "")
+        money.gsub('$', '').gsub(',', '').gsub('NT', "")
       end
 
       def convert_time(left_time)
