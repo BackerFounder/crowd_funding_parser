@@ -52,8 +52,10 @@ module CrowdFundingParser
         @jsons.compact!
         links = []
         Parallel.each(@jsons, in_precesses: 2, in_threads: 5) do |json|
-          project_url = json["urls"]["web"]["project"]
-          links << project_url
+          unless json["state"] == "finished" && json["pledged"].to_i == 0
+            project_url = json["urls"]["web"]["project"]
+            links << project_url
+          end
         end
         @parse_method = :json
         links
