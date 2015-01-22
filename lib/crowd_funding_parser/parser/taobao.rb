@@ -104,6 +104,18 @@ module CrowdFundingParser
         encode_gbk_to_utf(raw_summary)
       end
 
+      def get_start_date(result)
+        result["data"]["begin_date"]
+      end
+
+      def get_end_date(result)
+        result["data"]["end_date"]
+      end
+
+      def get_region(result)
+        "China"
+      end
+
       # for tracking
 
       def get_money_goal(result)

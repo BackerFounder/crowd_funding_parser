@@ -3,27 +3,30 @@ module CrowdFundingParser
     class General
       def parse_tracking_data(result, project_url)
         project = Hash.new
-        project['money_goal']      = get_money_goal(result).to_i
-        project['money_pledged']   = get_money_pledged(result).to_i
-        project['backer_count']    = get_backer_count(result).to_i
-        project['last_time']       = get_last_time(result)
-        project['status']          = get_status(project['last_time'])
-        project['fb_count']        = get_fb_count(result).to_i
-        project['following_count'] = get_following_count(result).to_i
+        project["money_goal"]      = get_money_goal(result).to_i
+        project["money_pledged"]   = get_money_pledged(result).to_i
+        project["backer_count"]    = get_backer_count(result).to_i
+        project["last_time"]       = get_last_time(result)
+        project["status"]          = get_status(project["last_time"])
+        project["fb_count"]        = get_fb_count(result).to_i
+        project["following_count"] = get_following_count(result).to_i
         project
       end
 
       def parse_content_data(result, project_url)
-        project                  = Hash.new
-        project['platform_project_id'] = get_id(project_url)
-        project['title']         = get_title(result)
-        project['url']           = project_url
-        project['summary']       = get_summary(result)
-        project['category']      = get_category(result)
-        project['creator_name']  = get_creator_name(result)
-        project['creator_id']    = get_creator_id(result)
-        project['creator_link']  = get_creator_link(result)
-        project['currency_string'] = get_currency_string(result)
+        project                    = Hash.new
+        project["platform_project_id"] = get_id(project_url)
+        project["title"]           = get_title(result)
+        project["url"]             = project_url
+        project["summary"]         = get_summary(result)
+        project["category"]        = get_category(result)
+        project["creator_name"]    = get_creator_name(result)
+        project["creator_id"]      = get_creator_id(result)
+        project["creator_link"]    = get_creator_link(result)
+        project["currency_string"] = get_currency_string(result)
+        project["start_date"]      = get_start_date(result)
+        project["end_date"]        = get_end_date(result)
+        project["region"]          = get_region(result)
         project
       end
 
@@ -97,7 +100,7 @@ module CrowdFundingParser
       end
 
       def money_string(money)
-        money.gsub('$', '').gsub(',', '').gsub('NT', "")
+        money.gsub("$","").gsub(",", "").gsub("NT", "")
       end
 
       def convert_time(left_time)
