@@ -159,6 +159,30 @@ module CrowdFundingParser
         end
       end
 
+      def get_start_date(result)
+        if @parse_method == :doc
+          # no start date on page
+        else
+          Time.at(result["launched_at"])
+        end
+      end
+
+      def get_end_date(result)
+        if @parse_method == :doc
+          result.css(".NS_projects__deadline_copy p.grey-dark time[datetime]")[0]["datetime"]
+        else
+          time = Time.at(result["deadline"])
+        end
+      end
+
+      def get_region(result)
+        if @parse_method == :doc
+          get_string(result.css(".container-flex .h5 a.grey-dark:nth-child(1) b"))
+        else
+          result["location"]["displayable_name"]
+        end
+      end
+
       # for tracking
 
       def get_money_goal(result)

@@ -43,6 +43,19 @@ module CrowdFundingParser
         doc.css(".tab-content .description").first.text.to_s[0..500].strip
       end
 
+      def get_start_date(doc)
+        
+      end
+
+      def get_end_date(doc)
+        date_string = get_string(doc.css(".container .col-md-3 .panel-body.bg_gray_h.fa-gray_d span:nth-child(2)"))
+        Date.parse(date_string)
+      end
+
+      def get_region(doc)
+        "Taiwan"
+      end
+
       # for tracking
 
       def get_money_goal(doc)

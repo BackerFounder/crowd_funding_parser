@@ -34,6 +34,22 @@ module CrowdFundingParser
         doc.css(".project-content").first.text.to_s[0..500].strip
       end
 
+      def get_start_date(doc)
+        text = get_string(doc.css(".sidebar .project-notice"))
+        regex = /\d{4}\/\d{2}\/\d{2}/
+        text.scan(regex).sort.first
+      end
+
+      def get_end_date(doc)
+        text = get_string(doc.css(".sidebar .project-notice"))
+        regex = /\d{4}\/\d{2}\/\d{2}/
+        text.scan(regex).sort.last
+      end
+
+      def get_region(doc)
+        "Taiwan"
+      end
+
       # for tracking
 
       def get_money_goal(doc)
