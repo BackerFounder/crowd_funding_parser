@@ -65,7 +65,7 @@ module CrowdFundingParser
       end
 
       def get_backer_count(doc)
-        get_string(doc.css("span.counter"))
+        doc.css("span.counter")[1].text
       end
 
       def get_last_time(doc)
