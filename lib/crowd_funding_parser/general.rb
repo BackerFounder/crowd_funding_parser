@@ -41,11 +41,7 @@ module CrowdFundingParser
             link_nodes = project.css("a:nth-child(1)")
             status = get_status(get_string(project.css(@status_css_class)))
             link = @url + link_nodes.first["href"]
-            if status == "finished" && required_status == "finished"
-              links << link
-            elsif status == "online" && required_status == "online"
-              links << link  
-            elsif status == "preparing" && required_status == "preparing"
+            if status == required_status
               links << link
             end
           end
