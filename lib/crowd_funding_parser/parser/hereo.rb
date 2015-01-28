@@ -80,6 +80,10 @@ module CrowdFundingParser
         ""
       end
 
+      def get_id(project_url)
+        project_url.split("pid=").last
+      end
+
       def get_following_count(doc)
         doc.css("strong#track-count").text
       end
