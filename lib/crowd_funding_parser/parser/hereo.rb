@@ -3,6 +3,7 @@ require 'httparty'
 module CrowdFundingParser
   module Parser
     class Hereo < General
+      include HTTParty
       def initialize
         @url = "http://www.hereo.cc/"
         @targets = [HTTParty.get(@url + "/project-list.php")]

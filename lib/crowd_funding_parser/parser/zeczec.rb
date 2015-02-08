@@ -3,6 +3,7 @@ require 'httparty'
 module CrowdFundingParser
   module Parser
     class Zeczec < General
+      include HTTParty
       def initialize
         @url = "https://www.zeczec.com"
         @targets = [HTTParty.get(@url + "/categories")]

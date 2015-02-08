@@ -3,6 +3,7 @@ require 'httparty'
 module CrowdFundingParser
   module Parser
     class Flyingv < General
+      include HTTParty
       def initialize(*cat)
         categories = cat.empty? ? ["designgoods", "media", "stageplay", "entertainment", "publish", "society", "technology", "food", "travel"] : cat
         @url = "https://www.flyingv.cc"

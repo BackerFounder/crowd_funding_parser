@@ -5,6 +5,7 @@ require "iconv"
 module CrowdFundingParser
   module Parser
     class Kickstarter < General
+      include HTTParty
       def initialize
         # art = 1, comic = 3, game = 12,
         @category_ids = [1, 3, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 26]
