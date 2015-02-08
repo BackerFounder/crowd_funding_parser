@@ -5,7 +5,7 @@ module CrowdFundingParser
     class Zeczec < General
       def initialize
         @url = "https://www.zeczec.com"
-        @targets = [open(@url + "/categories")]
+        @targets = [HTTParty.get(@url + "/categories")]
         @item_css_class = ".project-list .span4"
         @status_css_class = ".meta span:nth-child(2)"
       end
