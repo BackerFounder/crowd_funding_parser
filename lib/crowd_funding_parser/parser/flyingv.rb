@@ -10,7 +10,7 @@ module CrowdFundingParser
 
         categories.each do |category|
           category_url = @url + "/category/#{category}"
-          @targets << open(category_url)
+          @targets << HTTParty.get(category_url)
         end
 
         @item_css_class = ".portfolio-item"

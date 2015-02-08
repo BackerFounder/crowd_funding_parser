@@ -61,14 +61,14 @@ module CrowdFundingParser
       end
 
       def get_doc_through_url(project_url)
-        project_html = open(project_url)
+        project_html = HTTParty.get(project_url)
         Nokogiri::HTML(project_html)
       end
 
       def get_json_through_url(project_url)
         begin
-          open_url = open(project_url)
-          json = JSON.load(open_url)
+          httparty_url = HTTParty.get(project_url)
+          json = JSON.load(httparty_url)
         rescue Exception => e
           puts e
           puts project_url

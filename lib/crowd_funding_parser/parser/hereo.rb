@@ -5,7 +5,7 @@ module CrowdFundingParser
     class Hereo < General
       def initialize
         @url = "http://www.hereo.cc/"
-        @targets = [open(@url + "/project-list.php")]
+        @targets = [HTTParty.get(@url + "/project-list.php")]
         @item_css_class = ".project-list ul li"
         @status_css_class = ".projectImg .info .inner .detail span:nth-child(1)"
       end
