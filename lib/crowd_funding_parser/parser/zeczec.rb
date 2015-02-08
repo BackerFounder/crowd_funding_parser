@@ -1,4 +1,4 @@
-require 'open-uri'
+require 'httparty'
 
 module CrowdFundingParser
   module Parser

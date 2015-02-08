@@ -1,5 +1,5 @@
 require "json"
-require 'open-uri'
+require 'httparty'
 require "iconv"
 
 module CrowdFundingParser
