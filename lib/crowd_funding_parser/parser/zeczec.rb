@@ -4,12 +4,24 @@ module CrowdFundingParser
   module Parser
     class Zeczec < General
       include HTTParty
-      def initialize
-        @url = "https://www.zeczec.com"
-        @targets = [HTTParty.get(@url + "/categories")]
-        @item_css_class = ".project-list .span4"
-        @status_css_class = ".meta span:nth-child(2)"
+
+      def platform_url
+        "https://www.zeczec.com"
       end
+
+      def get_lists
+        [HTTParty.get(platform_url + "/categories")]
+      end
+
+      def item_css_class
+        ".project-list .span4"
+      end
+
+      def status_css_class
+        ".meta span:nth-child(2)"
+      end
+
+      # Project Info
 
       def get_title(doc)
         get_string(doc.css("a.project-title"))
@@ -28,7 +40,7 @@ module CrowdFundingParser
       end
 
       def get_creator_link(doc)
-        @url + doc.css(".creator .fly-center a").first["href"]
+        platform_url + doc.css(".creator .fly-center a").first["href"]
       end
 
       def get_summary(doc)
