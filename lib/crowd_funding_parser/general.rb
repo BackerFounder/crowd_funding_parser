@@ -70,7 +70,7 @@ module CrowdFundingParser
       def get_json_through_url(project_url)
         begin
           httparty_url = HTTParty.get(project_url)
-          json = JSON.load(httparty_url)
+          json = JSON.load(httparty_url.body)
         rescue Exception => e
           puts e
           puts project_url
