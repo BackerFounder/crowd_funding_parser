@@ -4,12 +4,24 @@ module CrowdFundingParser
   module Parser
     class Hereo < General
       include HTTParty
-      def initialize
-        @url = "http://www.hereo.cc/"
-        @targets = [HTTParty.get(@url + "/project-list.php")]
-        @item_css_class = ".project-list ul li"
-        @status_css_class = ".projectImg .info .inner .detail span:nth-child(1)"
+
+      def platform_url
+        "http://www.hereo.cc/"
       end
+
+      def get_lists
+        [HTTParty.get(platform_url + "/project-list.php")]
+      end
+
+      def item_css_class
+        ".project-list ul li"
+      end
+
+      def status_css_class
+        ".projectImg .info .inner .detail span:nth-child(1)"
+      end
+
+      # Project Info
 
       def get_title(doc)
         get_string(doc.css(".container .text h3"))
@@ -28,7 +40,7 @@ module CrowdFundingParser
       end
 
       def get_creator_link(doc)
-        @url + doc.css(".user-info .user .name h4 a")[0]["href"]
+        platform_url + doc.css(".user-info .user .name h4 a")[0]["href"]
       end
 
       def get_summary(doc)

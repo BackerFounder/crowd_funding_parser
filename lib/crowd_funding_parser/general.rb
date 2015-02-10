@@ -35,14 +35,14 @@ module CrowdFundingParser
       def get_project_links(required_status = "online")
         links = []
         
-        @targets.each do |target|
+        get_lists.each do |target|
           doc = Nokogiri::HTML(target)
-          online_projects = doc.css(@item_css_class)
+          online_projects = doc.css(item_css_class)
 
           Parallel.map(online_projects, in_processes: 2 , in_threads: 4) do |project|
             link_nodes = project.css("a:nth-child(1)")
-            status = get_status(get_string(project.css(@status_css_class)))
-            link = @url + link_nodes.first["href"]
+            status = get_status(get_string(project.css(status_css_class)))
+            link = platform_url + link_nodes.first["href"]
             if status == required_status
               links << link
             end
@@ -68,14 +68,8 @@ module CrowdFundingParser
       end
 
       def get_json_through_url(project_url)
-        begin
-          httparty_url = HTTParty.get(project_url)
-          json = JSON.load(httparty_url.body)
-        rescue Exception => e
-          puts e
-          puts project_url
-          {}
-        end
+        httparty_url = HTTParty.get(project_url)
+        json = JSON.load(httparty_url.body)
       end
 
       private
@@ -90,7 +84,7 @@ module CrowdFundingParser
       end
 
       def get_rel_url(url)
-        url.gsub("#{@url}", "")
+        url.gsub("#{platform_url}", "")
       end
 
       def get_string(elements)

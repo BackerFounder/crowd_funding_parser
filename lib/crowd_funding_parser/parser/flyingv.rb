@@ -4,21 +4,28 @@ module CrowdFundingParser
   module Parser
     class Flyingv < General
       include HTTParty
-      def initialize(*cat)
-        categories = cat.empty? ? ["designgoods", "media", "stageplay", "entertainment", "publish", "society", "technology", "food", "travel"] : cat
-        @url = "https://www.flyingv.cc"
-        @targets = []
 
-        categories.each do |category|
-          category_url = @url + "/category/#{category}"
-          @targets << HTTParty.get(category_url)
-        end
-
-        @item_css_class = ".portfolio-item"
-        @status_css_class = ".unit-time"
+      def platform_url
+        "https://www.flyingv.cc"
       end
 
-      # for project's info
+      def get_lists
+        categories = ["designgoods", "media", "stageplay", "entertainment", "publish", "society", "technology", "food", "travel"]
+        categories.map do |category|
+          category_url = platform_url + "/category/#{category}"
+          HTTParty.get(category_url)
+        end
+      end
+
+      def item_css_class
+        ".portfolio-item"
+      end
+
+      def status_css_class
+        ".unit-time"
+      end
+
+      # Project Info
 
       def get_title(doc)
         get_string(doc.css(".page-title-wrapper").css(".pagesTitle"))
@@ -37,7 +44,7 @@ module CrowdFundingParser
       end
 
       def get_creator_link(doc)
-        @url + doc.css(".profilemeta .imp a").first["href"]
+        platform_url + doc.css(".profilemeta .imp a").first["href"]
       end
 
       def get_summary(doc)

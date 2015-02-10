@@ -4,18 +4,25 @@ module CrowdFundingParser
   module Parser
     class Webackers < General
       include HTTParty
-      def initialize(*cat)
-        categories = cat.empty? ? ["ART", "PUBLICATION", "MUSIC", "DESIGN", "TECHNOLOGY", "ACG", "SURPRISE", "CHARITY", "VIDEO"] : cat
-        @url = "http://www.webackers.com"
-        @targets = []
 
-        categories.each do |category|
-          category_url = @url + "/Proposal/Browse?queryType=ALL&fundedStatus=ALL&category=#{category}"
-          @targets << HTTParty.get(category_url)
+      def platform_url
+        "http://www.webackers.com"
+      end
+
+      def get_lists
+        categories = ["ART", "PUBLICATION", "MUSIC", "DESIGN", "TECHNOLOGY", "ACG", "SURPRISE", "CHARITY", "VIDEO"]
+        categories.map do |category|
+          category_url = platform_url + "/Proposal/Browse?queryType=ALL&fundedStatus=ALL&category=#{category}"
+          HTTParty.get(category_url)
         end
+      end
 
-        @item_css_class = ".cbp-item"
-        @status_css_class = "li.timeitem"
+      def item_css_class
+        ".cbp-item"
+      end
+
+      def status_css_class
+        "li.timeitem"
       end
 
       # for project's info
@@ -37,7 +44,7 @@ module CrowdFundingParser
       end
 
       def get_creator_link(doc)
-        @url + doc.css(".headphoto_detail .name a").first["href"]
+        platform_url + doc.css(".headphoto_detail .name a").first["href"]
       end
 
       def get_summary(doc)
