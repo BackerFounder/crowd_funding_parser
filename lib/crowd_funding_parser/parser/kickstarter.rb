@@ -10,56 +10,54 @@ module CrowdFundingParser
         # art = 1, comic = 3, game = 12,
         @category_ids = [1, 3, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 26]
         @parse_method = :doc
-        @jsons = []
-        @url = "https://www.kickstarter.com"
       end
 
-      def get_result(project_url)
-        if @jsons.present?
-          result = []
-          Parallel.each(@jsons, in_precesses: 2, in_threads: 5) do |json|
-            result << json if json["urls"]["web"]["project"] == project_url
-          end
-          result.first
-        else
-          get_doc_through_url(project_url)
-        end
+      def platform_url
+        "https://www.kickstarter.com"
       end
 
       def get_all_categories(status = "online")
         status_code = get_status_code(status)
-        @jsons = get_total_jsons(status_code)
-        @jsons.flatten!
-        @jsons.compact!
+        jsons = get_category_project_jsons(status_code)
+        jsons.flatten.compact!
         categories = []
-        Parallel.each(@jsons, in_precesses: 2, in_threads: 5) do |json|
+        Parallel.each(jsons, in_precesses: 2, in_threads: 5) do |json|
           category = { id: json["category"]["id"], name: json["category"]["name"], parent_id: json["category"]["parent_id"]}
           categories << category
         end
         categories.uniq
       end
 
-      def get_main_categories(add_categories)
-        add_categories.select { |c| c[:parent_id].nil? }
-      end
-
       def get_project_links(status = "online")
         status_code = get_status_code(status)
-        @category_ids.each do |category_id|
-          category_jsons = get_total_jsons(status_code, category_id)
-          @jsons << category_jsons
-        end
-        @jsons.flatten!
-        @jsons.compact!
-        links = []
-        Parallel.each(@jsons, in_precesses: 2, in_threads: 5) do |json|
-          unless json["state"] == "finished" && json["pledged"].to_i == 0
-            project_url = json["urls"]["web"]["project"]
-            links << project_url
+
+        jsons = @category_ids.map do |category_id|
+          category_jsons = get_category_project_jsons(status_code, category_id)
+        end.flatten.compact
+
+        Parallel.map(jsons, in_precesses: 2, in_threads: 5) do |json|
+          unless json["state"] != "live" && json["pledged"].to_i == 0
+            if json["state"] == status_code
+              project_url = json["urls"]["web"]["project"]
+            end
           end
         end
-        @parse_method = :json
-        links
+      end
+
+      def get_category_project_jsons(status_code = "live", category_id = 0)
+        jsons = []
+
+        Parallel.each(1..200, in_precesses: 2, in_threads: 5) do |i|
+          begin
+            api_url = get_projects_page_api(i, status_code, category_id)
+            json = get_json_through_url(api_url)["projects"]
+            jsons << json
+          rescue Exception => e
+            puts e
+            Parallel::Stop
+          end
+        end
+        jsons
       end
 
       private
@@ -74,22 +72,6 @@ module CrowdFundingParser
 
       def get_project_search_result_api(name)
         "https://www.kickstarter.com/projects/search.json?term=#{name}"
-      end
-
-      def get_total_jsons(status_code = "live", category_id = 0)
-        jsons = []
-
-        Parallel.each(1..200, in_precesses: 2, in_threads: 5) do |i|
-          begin
-            api_url = get_projects_page_api(i, status_code, category_id)
-            json = get_json_through_url(api_url)["projects"]
-            jsons << json
-          rescue Exception => e
-            puts e
-            Parallel::Stop
-          end
-        end
-        jsons
       end
 
       def get_status_code(status)
@@ -146,7 +128,7 @@ module CrowdFundingParser
 
       def get_creator_link(result)
         if @parse_method == :doc
-          creator_link = @url + result.css(".NS_projects__creator .col-8>h5 a.remote_modal_dialog").first["href"]
+          creator_link = platform_url + result.css(".NS_projects__creator .col-8>h5 a.remote_modal_dialog").first["href"]
         else
           result["creator"]["urls"]["web"]["user"]
         end
