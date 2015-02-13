@@ -53,7 +53,6 @@ module CrowdFundingParser
             json = get_json_through_url(api_url)["projects"]
             jsons << json
           rescue Exception => e
-            puts e
             Parallel::Stop
           end
         end
