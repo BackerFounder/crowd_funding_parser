@@ -193,7 +193,7 @@ module CrowdFundingParser
 
       def get_last_time(result)
         if @parse_method == :doc
-          end_date = result.css("div[data-end_time]").first["data-end_time"]
+          end_date = result.css("div[data-end_time]").try(:first).try(:[], "data-end_time") || Time.now.to_s
           last_seconds = Time.parse(end_date) - Time.now
         else
           last_seconds = result["deadline"].to_i - Time.now.to_i
