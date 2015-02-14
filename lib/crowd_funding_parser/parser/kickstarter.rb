@@ -151,7 +151,7 @@ module CrowdFundingParser
 
       def get_end_date(result)
         if @parse_method == :doc
-          result.css(".NS_projects__deadline_copy p.grey-dark time[datetime]")[0]["datetime"]
+          result.css(".NS_projects__deadline_copy p.grey-dark time[datetime]").try(:first).try(:[], "datetime")
         else
           time = Time.at(result["deadline"])
         end
