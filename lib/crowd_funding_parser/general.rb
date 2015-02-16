@@ -88,7 +88,11 @@ module CrowdFundingParser
       end
 
       def get_string(elements)
-        elements.nil? ? "" : elements.first.text.strip
+        begin
+          elements.first.text.strip
+        rescue
+          ""
+        end
       end
 
       def money_string(money)
