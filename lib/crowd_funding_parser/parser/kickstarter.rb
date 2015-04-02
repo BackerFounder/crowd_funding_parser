@@ -123,6 +123,8 @@ module CrowdFundingParser
         else
           result["creator"]["id"]
         end
+      rescue
+        ""
       end
 
       def get_creator_link(result)

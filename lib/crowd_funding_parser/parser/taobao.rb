@@ -81,6 +81,8 @@ module CrowdFundingParser
 
       def get_title(result)
         result["data"]["name"]
+      rescue
+        ""
       end
 
       def get_category(result)

@@ -41,6 +41,8 @@ module CrowdFundingParser
 
       def get_creator_id(doc)
         doc.css(".page-title-wrapper").css(".pageDes")[1].css("a").first["href"].split("/").last
+      rescue
+        ""
       end
 
       def get_creator_link(doc)

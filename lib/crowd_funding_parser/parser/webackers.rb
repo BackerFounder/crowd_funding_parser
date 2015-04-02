@@ -41,10 +41,14 @@ module CrowdFundingParser
 
       def get_creator_id(doc)
         doc.css(".headphoto_detail .name a").first["href"].split("/").last
+      rescue
+        ""
       end
 
       def get_creator_link(doc)
         platform_url + doc.css(".headphoto_detail .name a").first["href"]
+      rescue
+        ""
       end
 
       def get_summary(doc)

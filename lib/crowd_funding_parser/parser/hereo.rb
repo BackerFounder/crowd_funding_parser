@@ -37,6 +37,8 @@ module CrowdFundingParser
 
       def get_creator_id(doc)
         doc.css(".user-info .user .name h4 a")[0]["href"].match(/mid=(\d+)/)[1]
+      rescue
+        ""
       end
 
       def get_creator_link(doc)
