@@ -18,7 +18,8 @@ module MethodBuilder
         begin
           block.call(arg)
         rescue Exception => e
-          puts e
+          puts "Error #{e.message}"
+          puts e.backtrace.first
           ""
         end
       end
