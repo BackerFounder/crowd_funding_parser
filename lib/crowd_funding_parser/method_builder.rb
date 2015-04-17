@@ -6,14 +6,17 @@ module MethodBuilder
   class ParserMethodProxy
     def insert_class(inserted_class)
       @inserted_class = "CrowdFundingParser::Parser::#{inserted_class}".constantize
-      @inserted_class_instance = @inserted_class.new
     end
 
     def set_variable(&block)
       block.call
     end
 
-    def set_method(method_name, &block)
+    def set_method(method_name, reuse: false, &block)
+      self.class.send(:define_method, method_name) do |arg|
+        block.call(arg)
+      end if reuse
+
       @inserted_class.send(:define_method, method_name) do |arg|
         begin
           block.call(arg)

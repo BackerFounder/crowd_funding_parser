@@ -87,31 +87,8 @@ module CrowdFundingParser
         rel_url.split("/").last.split("?").first
       end
 
-      def summarize_project_content(string)
-        string.to_s[0..500].strip
-      end
-
       def get_rel_url(url)
         url.gsub("#{@platform_url}", "")
-      end
-
-      def get_string(elements)
-        begin
-          elements.first.text.strip
-        rescue
-          ""
-        end
-      end
-
-      def money_string(money)
-        money.gsub("$","").gsub(",", "").gsub("NT", "")
-      end
-
-      def convert_time(left_time)
-        days = ((left_time / (60 * 60 * 24))).to_i
-        hours = ((left_time / (60 * 60)) % 24).to_i
-        minutes = ((left_time / 60) % 60).to_i
-        "#{days}天#{hours}小時#{minutes}分鐘"
       end
     end
   end
