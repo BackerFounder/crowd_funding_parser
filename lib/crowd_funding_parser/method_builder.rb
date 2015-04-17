@@ -1,5 +1,5 @@
 module MethodBuilder
-  def set_methods(&block)
+  def self.set_methods(&block)
     ParserMethodProxy.new.instance_eval(&block)
   end
 

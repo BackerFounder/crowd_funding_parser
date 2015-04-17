@@ -15,11 +15,12 @@ module CrowdFundingParser
         end
       end
 
-      set_methods do
+      MethodBuilder.set_methods do
         insert_class "Flyingv"
 
         set_variable do
           @platform_url = "https://www.flyingv.cc"
+          @time_regex = /(\d{4}\/\d{2}\/\d{2}).+(\d{4}\/\d{2}\/\d{2})/
         end
 
         set_method :get_title do |doc|
@@ -48,14 +49,12 @@ module CrowdFundingParser
 
         set_method :get_start_date do |doc|
           text = get_string(doc.css(".col-xs-4.sidebarprj")).gsub(/\n/, "")
-          regex = /(\d{4}\/\d{2}\/\d{2}).+(\d{4}\/\d{2}\/\d{2})/
-          regex.match(text)[1]
+          @time_regex.match(text)[1]
         end
 
         set_method :get_end_date do |doc|
           text = get_string(doc.css(".col-xs-4.sidebarprj")).gsub(/\n/, "")
-          regex = /(\d{4}\/\d{2}\/\d{2}).+(\d{4}\/\d{2}\/\d{2})/
-          regex.match(text)[2]
+          @time_regex.match(text)[2]
         end
 
         set_method :get_region do |doc|

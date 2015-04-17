@@ -5,8 +5,6 @@ module CrowdFundingParser
   module Parser
     class General
       include HTTParty
-      include MethodBuilder
-      extend MethodBuilder
 
       def parse_tracking_data(result, project_url)
         project = Hash.new
