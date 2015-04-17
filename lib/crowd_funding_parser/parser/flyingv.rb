@@ -9,6 +9,18 @@ module CrowdFundingParser
         "https://www.flyingv.cc"
       end
 
+      set_methods do
+        insert_class "Flyingv"
+
+        set_method :get_123 do
+          "123"
+        end
+
+        set_method :get_456 do
+          puts qwe
+        end
+      end
+
       def get_lists
         categories = ["designgoods", "media", "stageplay", "entertainment", "publish", "society", "technology", "food", "travel"]
         categories.map do |category|

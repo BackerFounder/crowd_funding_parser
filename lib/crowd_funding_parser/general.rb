@@ -1,8 +1,13 @@
 require 'httparty'
+require_relative "method_builder"
+
 module CrowdFundingParser
   module Parser
     class General
       include HTTParty
+      include MethodBuilder
+      extend MethodBuilder
+
       def parse_tracking_data(result, project_url)
         project = Hash.new
         project["money_goal"]      = get_money_goal(result).to_i
