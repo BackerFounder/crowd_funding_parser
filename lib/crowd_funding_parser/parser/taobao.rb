@@ -1,11 +1,9 @@
 require "json"
-require 'httparty'
 require "iconv"
 
 module CrowdFundingParser
   module Parser
     class Taobao < General
-      include HTTParty
       def initialize
         @parse_method = :json
         @url = "http://hi.taobao.com/market/hi/detail2014.php?id="

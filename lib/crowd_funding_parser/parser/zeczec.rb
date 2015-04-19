@@ -6,7 +6,6 @@ module CrowdFundingParser
         @platform_url = "https://www.zeczec.com"
         @item_css_class = ".project-list .span4"
         @status_css_class = ".meta span:nth-child(2)"
-        set_methods
       end
 
       def get_lists

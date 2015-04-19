@@ -28,6 +28,10 @@ module MethodBuilder
       end
     end
 
+    def method_missing(m, *args, &block) 
+      ""
+    end
+
     def get_string(elements)
       elements.first.text.strip
     end
