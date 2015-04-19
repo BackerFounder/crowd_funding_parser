@@ -85,10 +85,6 @@ module CrowdFundingParser
           end
         end
 
-        set_method :get_fb_count do
-          ""
-        end
-
         set_method :get_following_count do
           doc.css("strong#track-count").text
         end

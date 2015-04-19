@@ -90,6 +90,14 @@ module CrowdFundingParser
       def get_rel_url(url)
         url.gsub("#{@platform_url}", "")
       end
+
+      def method_missing(m, *args, &block)
+        if m.to_s.match(/get/)
+          ""
+        else
+          super
+        end
+      end
     end
   end
 end

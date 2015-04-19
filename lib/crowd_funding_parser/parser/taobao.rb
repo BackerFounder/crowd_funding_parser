@@ -71,107 +71,78 @@ module CrowdFundingParser
         "http://hstar-hi.alicdn.com/dream/ajax/getProjectList.htm?page=#{page}&pageSize=20&projectType=&type=6&status=#{status}"
       end
 
-      # get data info
-
       def get_id(project_url)
         project_url.split("id=").last
       end
 
-      def get_title(result)
-        result["data"]["name"]
-      rescue
-        ""
-      end
+      MethodBuilder.set_methods do
+        insert_class "Taobao"
 
-      def get_category(result)
-
-      end
-
-      def get_creator_name(result)
-        raw_creator_name = result["data"]["person"]["name"]
-        encode_gbk_to_utf(raw_creator_name)
-      end
-
-      def get_creator_id(result)
-        # json.css(".page-title-wrapper").css(".pageDes")[1].css("a").first["href"].split("/").last
-      end
-
-      def get_creator_link(result)
-        # @url + json.css(".profilemeta .imp a").first["href"]
-      end
-
-      def get_summary(result)
-        raw_summary = result["data"]["desc"]
-        encode_gbk_to_utf(raw_summary)
-      end
-
-      def get_start_date(result)
-        result["data"]["begin_date"]
-      end
-
-      def get_end_date(result)
-        result["data"]["end_date"]
-      end
-
-      def get_region(result)
-        "China"
-      end
-
-      # for tracking
-
-      def get_money_goal(result)
-        result["data"]["target_money"]
-      end
-
-      def get_money_pledged(result)
-        result["data"]["curr_money"]
-      end
-
-      def get_backer_count(result)
-        result["data"]["support_person"]
-      end
-
-      def get_last_time(result)
-        result["data"]["remain_day"]
-      end
-
-      def get_status(last_time)
-        if last_time == "0"
-          "finished"
-        else
-          "online"
+        set_method :get_title do |result|
+          result["data"]["name"]
         end
-        # if result["remain_day"] == "0" && result["plan_end_days"] == ["0"]
-        #   "finished"
-        # elsif result["plan_end_days"] != ["0"]
-        #   "preparing"
-        # else
-        #   "online"
-        # end
-      end
 
-      def get_fb_count(result)
-        
-      end
+        set_method :get_creator_name do |result|
+          raw_creator_name = result["data"]["person"]["name"]
+          encode_gbk_to_utf(raw_creator_name)
+        end
 
-      def get_following_count(result)
-        result["data"]["focus_count"]
-      end
+        set_method :get_summary do |result|
+          raw_summary = result["data"]["desc"]
+          encode_gbk_to_utf(raw_summary)
+        end
 
-      def get_backer_list(project_url)
-        []
-      end
+        set_method :get_start_date do |result|
+          result["data"]["begin_date"]
+        end
 
-      def get_currency_string(result)
-        "cny"
-      end
+        set_method :get_end_date do |result|
+          result["data"]["end_date"]
+        end
 
-      def encode_gbk_to_utf(string)
-        begin
-          Iconv.conv("utf-8//ignore", "gb2312//ignore", string)
-        rescue Exception => e
-          puts e
-          string
+        set_method :get_region do |result|
+          "China"
+        end
+
+        set_method :get_money_goal do |result|
+          result["data"]["target_money"]
+        end
+
+        set_method :get_money_pledged do |result|
+          result["data"]["curr_money"]
+        end
+
+        set_method :get_backer_count do |result|
+          result["data"]["support_person"]
+        end
+
+        set_method :get_last_time do |result|
+          result["data"]["remain_day"]
+        end
+
+        set_method :get_status do |last_time|
+          if last_time == "0"
+            "finished"
+          else
+            "online"
+          end
+        end
+
+        set_method :get_following_count do |result|
+          result["data"]["focus_count"]
+        end
+
+        set_method :get_currency_string do |result|
+          "cny"
+        end
+
+        set_method :encode_gbk_to_utf, reuse: true do |string|
+          begin
+            Iconv.conv("utf-8//ignore", "gb2312//ignore", string)
+          rescue Exception => e
+            puts e
+            string
+          end
         end
       end
     end

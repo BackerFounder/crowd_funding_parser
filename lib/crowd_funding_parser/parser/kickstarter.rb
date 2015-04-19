@@ -110,10 +110,6 @@ module CrowdFundingParser
           get_string(doc.css(".container-flex .col-8 .mobile-hide p.h3.mb3"))
         end
 
-        set_method :get_start_date do |doc|
-          ""
-        end
-
         set_method :get_end_date do |doc|
           doc.css(".NS_projects__deadline_copy p.grey-dark time[datetime]").try(:first).try(:[], "datetime")
         end
@@ -153,12 +149,6 @@ module CrowdFundingParser
           end
         end
 
-        set_method :get_fb_count do
-          ""
-        end
-        set_method :get_following_count do
-          ""
-        end
         set_method :get_currency_string do |doc|
           doc.css("data[data-currency]")[0]["data-currency"]
         end
