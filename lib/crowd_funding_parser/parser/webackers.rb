@@ -10,7 +10,7 @@ module CrowdFundingParser
       def get_lists
         categories = ["ART", "PUBLICATION", "MUSIC", "DESIGN", "TECHNOLOGY", "ACG", "SURPRISE", "CHARITY", "VIDEO"]
         categories.map do |category|
-          category_url = platform_url + "/Proposal/Browse?queryType=ALL&fundedStatus=ALL&category=#{category}"
+          category_url = @platform_url + "/Proposal/Browse?queryType=ALL&fundedStatus=ALL&category=#{category}"
           HTTParty.get(category_url)
         end
       end
