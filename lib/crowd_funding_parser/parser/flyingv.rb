@@ -24,7 +24,7 @@ module CrowdFundingParser
         end
 
         set_method :get_title do |doc|
-          doc.css(".page-title-wrapper").css(".pageDes").first.css("a").first.text
+          get_string(doc.css(".page-title-wrapper").css(".pagesTitle"))
         end
 
         set_method :get_category do |doc|
