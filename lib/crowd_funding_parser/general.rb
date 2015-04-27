@@ -1,8 +1,11 @@
 require 'httparty'
+require_relative "method_builder"
+
 module CrowdFundingParser
   module Parser
     class General
       include HTTParty
+
       def parse_tracking_data(result, project_url)
         project = Hash.new
         project["money_goal"]      = get_money_goal(result).to_i
@@ -37,12 +40,12 @@ module CrowdFundingParser
         
         get_lists.each do |target|
           doc = Nokogiri::HTML(target)
-          online_projects = doc.css(item_css_class)
+          online_projects = doc.css(@item_css_class)
 
           Parallel.map(online_projects, in_processes: 2 , in_threads: 4) do |project|
             link_nodes = project.css("a:nth-child(1)")
-            status = get_status(get_string(project.css(status_css_class)))
-            link = platform_url + link_nodes.first["href"]
+            status = get_status(get_string(project.css(@status_css_class)))
+            link = @platform_url + link_nodes.first["href"]
             if status == required_status
               links << link
             end
@@ -72,6 +75,11 @@ module CrowdFundingParser
         json = JSON.load(httparty_url.body)
       end
 
+      def get_project(project_url)
+        result = get_result(project_url)
+        parse_content_data(result, project_url).merge parse_tracking_data(result, project_url)
+      end
+
       private
 
       def get_id(project_url)
@@ -79,31 +87,16 @@ module CrowdFundingParser
         rel_url.split("/").last.split("?").first
       end
 
-      def summarize_project_content(string)
-        string.to_s[0..500].strip
-      end
-
       def get_rel_url(url)
-        url.gsub("#{platform_url}", "")
+        url.gsub("#{@platform_url}", "")
       end
 
-      def get_string(elements)
-        begin
-          elements.first.text.strip
-        rescue
+      def method_missing(m, *args, &block)
+        if m.to_s.match(/get/)
           ""
+        else
+          super
         end
-      end
-
-      def money_string(money)
-        money.gsub("$","").gsub(",", "").gsub("NT", "")
-      end
-
-      def convert_time(left_time)
-        days = ((left_time / (60 * 60 * 24))).to_i
-        hours = ((left_time / (60 * 60)) % 24).to_i
-        minutes = ((left_time / 60) % 60).to_i
-        "#{days}天#{hours}小時#{minutes}分鐘"
       end
     end
   end

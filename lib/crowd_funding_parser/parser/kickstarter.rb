@@ -1,19 +1,13 @@
 require "json"
-require 'httparty'
 require "iconv"
 
 module CrowdFundingParser
   module Parser
     class Kickstarter < General
-      include HTTParty
       def initialize
-        # art = 1, comic = 3, game = 12,
+        @platform_url = "https://www.kickstarter.com"
         @category_ids = [1, 3, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 26]
         @parse_method = :doc
-      end
-
-      def platform_url
-        "https://www.kickstarter.com"
       end
 
       def get_all_categories(status = "online")
@@ -69,7 +63,7 @@ module CrowdFundingParser
         "https://www.kickstarter.com/projects/search.json?page=#{page}&state=#{status_code}&category_id=#{category_id}"
       end
 
-      def get_project_search_result_api(name)
+      def get_project_search_doc_api(name)
         "https://www.kickstarter.com/projects/search.json?term=#{name}"
       end
 
@@ -84,155 +78,79 @@ module CrowdFundingParser
         end
       end
 
-      # get data info
+      MethodBuilder.set_methods do
+        insert_class "Kickstarter"
 
-      # def get_id(project_url)
-      #   regex = /\/(\d{5,}+)\/([a-zA-z0-9-]+)/
-      #   regex.match(project_url)[2]
-      #   # project_url.split("/").last.split("?").first
-      # end
-
-      def get_title(result)
-        if @parse_method == :doc
-          get_string(result.css(".NS_projects__header h2 .green-dark"))
-        else
-          result["name"]
+        set_variable do
+          @platform_url = "https://www.kickstarter.com"
         end
-      end
 
-      def get_category(result)
-        if @parse_method == :doc
-          get_string(result.css(".container-flex .h5 a.grey-dark:nth-child(2) b"))
-        else
-          result["category"]["name"]
+        set_method :get_title do |doc|
+          get_string(doc.css(".NS_projects__header h2 .green-dark"))
         end
-      end
 
-      def get_creator_name(result)
-        if @parse_method == :doc
-          get_string(result.css(".NS_projects__creator .col-8>h5 a.remote_modal_dialog"))
-        else
-          result["creator"]["name"]
+        set_method :get_category do |doc|
+          get_string(doc.css(".container-flex .h5 a.grey-dark:nth-child(2) b"))
         end
-      end
 
-      def get_creator_id(result)
-        if @parse_method == :doc
-          creator_link = result.css(".NS_projects__creator .col-8>h5 a.remote_modal_dialog").first["href"]
-          creator_link.split("/")[-3]
-        else
-          result["creator"]["id"]
+        set_method :get_creator_name do |doc|
+          get_string(doc.css(".NS_projects__creator .col-8>h5 a.remote_modal_dialog"))
         end
-      rescue
-        ""
-      end
 
-      def get_creator_link(result)
-        if @parse_method == :doc
-          creator_link = platform_url + result.css(".NS_projects__creator .col-8>h5 a.remote_modal_dialog").first["href"]
-        else
-          result["creator"]["urls"]["web"]["user"]
+        set_method :get_creator_id do |doc|
+          creator_path = doc.css(".NS_projects__creator .col-8>h5 a.remote_modal_dialog").first["href"]
+          creator_path.split("/")[-3]
         end
-      end
 
-      def get_summary(result)
-        if @parse_method == :doc
-          get_string(result.css(".container-flex .col-8 .mobile-hide p.h3.mb3"))
-        else
-          result["blurb"]
+        set_method :get_creator_link do |doc|
+          @platform_url + doc.css(".NS_projects__creator .col-8>h5 a.remote_modal_dialog").first["href"]
         end
-      end
 
-      def get_start_date(result)
-        if @parse_method == :doc
-          # no start date on page
-        else
-          Time.at(result["launched_at"])
+        set_method :get_summary do |doc|
+          get_string(doc.css(".container-flex .col-8 .mobile-hide p.h3.mb3"))
         end
-      end
 
-      def get_end_date(result)
-        if @parse_method == :doc
-          result.css(".NS_projects__deadline_copy p.grey-dark time[datetime]").try(:first).try(:[], "datetime")
-        else
-          time = Time.at(result["deadline"])
+        set_method :get_end_date do |doc|
+          doc.css(".NS_projects__deadline_copy p.grey-dark time[datetime]").try(:first).try(:[], "datetime")
         end
-      end
 
-      def get_region(result)
-        if @parse_method == :doc
-          get_string(result.css(".container-flex .h5 a.grey-dark:nth-child(1) b"))
-        else
-          result["location"]["displayable_name"]
+        set_method :get_region do |doc|
+          get_string(doc.css(".container-flex .h5 a.grey-dark:nth-child(1) b"))
         end
-      end
 
-      # for tracking
-
-      def get_money_goal(result)
-        if @parse_method == :doc
-          result.css("div[data-pledged]").first["data-goal"]
-        else
-          result["goal"]
+        set_method :get_money_pledged, reuse: true do |doc|
+          doc.css("div[data-pledged]").first["data-pledged"]
         end
-      end
 
-      def get_money_pledged(result)
-        if @parse_method == :doc
-          result.css("div[data-pledged]").first["data-pledged"]
-        else
-          result["pledged"]
+        set_method :get_money_goal do |doc|
+          doc.css("div[data-pledged]").first["data-goal"]
         end
-      end
 
-      def get_backer_count(result)
-        if @parse_method == :doc
-          result.css("div[data-backers-count]").first["data-backers-count"]
-        else
-          result["backers_count"]
+        set_method :get_backer_count do |doc|
+          doc.css("div[data-backers-count]").first["data-backers-count"]
         end
-      end
 
-      def get_last_time(result)
-        if @parse_method == :doc
-          end_date = result.css("div[data-end_time]").try(:first).try(:[], "data-end_time") || Time.now.to_s
+        set_method :get_last_time do |doc|
+          end_date = doc.css("div[data-end_time]").try(:first).try(:[], "data-end_time") || Time.now.to_s
           last_seconds = Time.parse(end_date) - Time.now
-        else
-          last_seconds = result["deadline"].to_i - Time.now.to_i
+          last_day = last_seconds.to_i / 86400
+          if last_day <= 0
+            "已結束"
+          else
+            last_day.to_s + "天"
+          end
         end
-        last_day = last_seconds.to_i / 86400
-        if last_day <= 0
-          "已結束"
-        else
-          last_day.to_s + "天"
+
+        set_method :get_status do |last_time|
+          if last_time == "已結束"
+            "finished"
+          else
+            "online"
+          end
         end
-      end
 
-      def get_status(last_time)
-        if last_time == "已結束"
-          "finished"
-        else
-          "online"
-        end
-      end
-
-      def get_fb_count(result)
-        
-      end
-
-      def get_following_count(result)
-        
-      end
-
-      def get_backer_list(project_url)
-        []
-      end
-
-      def get_currency_string(result)
-        if @parse_method == :doc
-          result.css("data[data-currency]")[0]["data-currency"]
-        else
-          result["currency"]
+        set_method :get_currency_string do |doc|
+          doc.css("data[data-currency]")[0]["data-currency"]
         end
       end
     end
