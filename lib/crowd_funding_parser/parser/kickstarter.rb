@@ -79,7 +79,7 @@ module CrowdFundingParser
       end
 
       MethodBuilder.set_methods do
-        insert_class "Kickstarter"
+        insert_parser "Kickstarter"
 
         set_variable do
           @platform_url = "https://www.kickstarter.com"
@@ -118,7 +118,7 @@ module CrowdFundingParser
           get_string(doc.css(".container-flex .h5 a.grey-dark:nth-child(1) b"))
         end
 
-        set_method :get_money_pledged, reuse: true do |doc|
+        set_method :get_money_pledged do |doc|
           doc.css("div[data-pledged]").first["data-pledged"]
         end
 

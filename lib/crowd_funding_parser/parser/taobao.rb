@@ -76,7 +76,7 @@ module CrowdFundingParser
       end
 
       MethodBuilder.set_methods do
-        insert_class "Taobao"
+        insert_parser "Taobao"
 
         set_method :get_title do |result|
           result["data"]["name"]
@@ -84,12 +84,12 @@ module CrowdFundingParser
 
         set_method :get_creator_name do |result|
           raw_creator_name = result["data"]["person"]["name"]
-          encode_gbk_to_utf(raw_creator_name)
+          @parser.encode_gbk_to_utf(raw_creator_name)
         end
 
         set_method :get_summary do |result|
           raw_summary = result["data"]["desc"]
-          encode_gbk_to_utf(raw_summary)
+          @parser.encode_gbk_to_utf(raw_summary)
         end
 
         set_method :get_start_date do |result|
@@ -136,7 +136,7 @@ module CrowdFundingParser
           "cny"
         end
 
-        set_method :encode_gbk_to_utf, reuse: true do |string|
+        set_method :encode_gbk_to_utf do |string|
           begin
             Iconv.conv("utf-8//ignore", "gb2312//ignore", string)
           rescue Exception => e

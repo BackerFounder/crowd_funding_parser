@@ -16,7 +16,7 @@ module CrowdFundingParser
       end
 
       MethodBuilder.set_methods do
-        insert_class "Webackers"
+        insert_parser "Webackers"
 
         set_variable do
           @platform_url = "http://www.webackers.com"

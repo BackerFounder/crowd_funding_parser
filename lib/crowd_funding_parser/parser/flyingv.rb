@@ -16,7 +16,7 @@ module CrowdFundingParser
       end
 
       MethodBuilder.set_methods do
-        insert_class "Flyingv"
+        insert_parser "Flyingv"
 
         set_variable do
           @platform_url = "https://www.flyingv.cc"

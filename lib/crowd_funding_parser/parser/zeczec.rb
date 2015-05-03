@@ -13,7 +13,7 @@ module CrowdFundingParser
       end
 
       MethodBuilder.set_methods do
-        insert_class "Zeczec"
+        insert_parser "Zeczec"
 
         set_variable do
           @platform_url = "https://www.zeczec.com"
@@ -58,16 +58,18 @@ module CrowdFundingParser
           "Taiwan"
         end
 
-        set_method :get_money_pledged, reuse: true do |doc|
-          money_string(get_string(doc.css(".sidebar h3.num")))
+        set_method :get_money_pledged do |doc|
+          money_string(get_string(doc.css(".sidebar h3.num"))).to_i
+        end
+
+        set_method :get_percentage do |doc|
+          get_string(doc.css(".sidebar .row-fluid .span6 .js-percentage-raised")).to_f
         end
 
         set_method :get_money_goal do |doc|
-          if doc.css(".sidebar .project-notice strong").empty?
-            get_money_pledged(doc).to_i / get_percentage(doc).to_i * 100
-          else
-            money_string(get_string(doc.css(".sidebar .project-notice strong:nth-child(2)")))
-          end
+          money_pledged = @parser.get_money_pledged(doc)
+          percentage = @parser.get_percentage(doc)/100
+          (money_pledged / percentage).to_i
         end
 
         set_method :get_backer_count do |doc|
@@ -96,10 +98,6 @@ module CrowdFundingParser
         end
         set_method :get_currency_string do |result|
           "twd"
-        end
-
-        set_method :get_percentage, reuse: true do |doc|
-          money_string(get_string(doc.css(".sidebar .row-fluid .span6:nth-child(1) h3.num")))
         end
       end
     end

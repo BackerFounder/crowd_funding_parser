@@ -4,20 +4,17 @@ module MethodBuilder
   end
 
   class ParserMethodProxy
-    def insert_class(inserted_class)
-      @inserted_class = "CrowdFundingParser::Parser::#{inserted_class}".constantize
+    def insert_parser(inserted_class)
+      @parser_class = "CrowdFundingParser::Parser::#{inserted_class}".constantize
+      @parser = @parser_class.new
     end
 
     def set_variable(&block)
       block.call
     end
 
-    def set_method(method_name, reuse: false, &block)
-      self.class.send(:define_method, method_name) do |arg|
-        block.call(arg)
-      end if reuse
-
-      @inserted_class.send(:define_method, method_name) do |arg|
+    def set_method(method_name, &block)
+      @parser_class.send(:define_method, method_name) do |arg|
         begin
           block.call(arg)
         rescue Exception => e
@@ -28,7 +25,7 @@ module MethodBuilder
       end
     end
 
-    def method_missing(m, *args, &block) 
+    def method_missing(m, *args, &block)
       ""
     end
 

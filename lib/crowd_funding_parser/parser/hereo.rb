@@ -16,7 +16,7 @@ module CrowdFundingParser
       end
 
       MethodBuilder.set_methods do
-        insert_class "Hereo"
+        insert_parser "Hereo"
 
         set_variable do
           @platform_url = "http://www.hereo.cc/"
@@ -57,7 +57,7 @@ module CrowdFundingParser
           "Taiwan"
         end
 
-        set_method :get_money_pledged, reuse: true do |doc|
+        set_method :get_money_pledged do |doc|
           money_string(doc.css(".projectInfo .funded .inner .number strong").text.match(/[0-9,]+/).to_s)
         end
 
