@@ -73,7 +73,11 @@ module CrowdFundingParser
         end
 
         set_method :get_backer_count do |doc|
-          doc.css("span.counter")[1].text
+          link_regex = /projects\/.+\/backers/
+          backer_count_tab = doc.css(".project-menu .nav-tabs a").map do |tab|
+            tab if tab["href"].match(link_regex)
+          end.compact[0]
+          backer_count_tab.css("span").text.to_i
         end
 
         set_method :get_last_time do |doc|
