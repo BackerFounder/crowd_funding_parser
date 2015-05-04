@@ -130,7 +130,7 @@ module CrowdFundingParser
           doc.css("div[data-backers-count]").first["data-backers-count"]
         end
 
-        set_method :get_last_time do |doc|
+        set_method :get_left_time do |doc|
           end_date = doc.css("div[data-end_time]").try(:first).try(:[], "data-end_time") || Time.now.to_s
           last_seconds = Time.parse(end_date) - Time.now
           last_day = last_seconds.to_i / 86400
@@ -141,8 +141,8 @@ module CrowdFundingParser
           end
         end
 
-        set_method :get_status do |last_time|
-          if last_time == "已結束"
+        set_method :get_status do |left_time|
+          if left_time == "已結束"
             "finished"
           else
             "online"

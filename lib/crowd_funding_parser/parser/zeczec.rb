@@ -80,14 +80,14 @@ module CrowdFundingParser
           backer_count_tab.css("span").text.to_i
         end
 
-        set_method :get_last_time do |doc|
+        set_method :get_left_time do |doc|
           money_string(get_string(doc.css(".sidebar .row-fluid .span6:nth-child(2) h3.num")))
         end
 
-        set_method :get_status do |last_time|
-          if last_time.match("前") || last_time.match("達成")
+        set_method :get_status do |left_time|
+          if left_time.match("前") || left_time.match("達成")
             "finished"
-          elsif last_time.match("開始")
+          elsif left_time.match("開始")
             "preparing"
           else
             "online"

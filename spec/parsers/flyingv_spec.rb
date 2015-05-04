@@ -37,17 +37,20 @@ describe CrowdFundingParser::Parser::Flyingv do
   it "gets money pledged" do
     expect(subject.get_money_pledged(doc)).to eq('3546200')
   end
-  it "gets money_goal" do
-    expect(subject.get_money_goal(doc)).to eq('360000')
+  it "gets backer count" do
+    expect(subject.get_backer_count(doc)).to eq('704')
   end
-  it "gets money_goal" do
-    expect(subject.get_money_goal(doc)).to eq('360000')
+  it "gets left_time" do
+    expect(subject.get_left_time(doc)).to eq('已結束')
   end
-  it "gets money_goal" do
-    expect(subject.get_money_goal(doc)).to eq('360000')
+  it "gets status" do
+    left_time = subject.get_left_time(doc)
+    expect(subject.get_status(left_time)).to eq('finished')
   end
-  it "gets money_goal" do
-    expect(subject.get_money_goal(doc)).to eq('360000')
+  it "gets fb count" do
+    expect(subject.get_fb_count(doc)).to eq("")
   end
-
+  it "gets following count" do
+    expect(subject.get_following_count(doc)).to eq("781")
+  end
 end

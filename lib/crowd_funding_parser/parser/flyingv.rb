@@ -73,14 +73,14 @@ module CrowdFundingParser
           get_string(doc.css(".countdes .dt .pull-right")).sub("人贊助", "")
         end
 
-        set_method :get_last_time do |doc|
+        set_method :get_left_time do |doc|
           get_string(doc.css(".countdes .dt div:nth-child(2)")).sub("剩餘", "")
         end
 
-        set_method :get_status do |last_time|
-          if last_time.match("已結束")
+        set_method :get_status do |left_time|
+          if left_time.match("已結束")
             "finished"
-          elsif last_time.match("開始")
+          elsif left_time.match("開始")
             "preparing"
           else
             "online"
