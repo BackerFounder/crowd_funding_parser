@@ -11,5 +11,5 @@ VCR.configure do |config|
 end
 
 RSpec.configure do |config|
-  config.include VcrSites::Flyingv
+  config.include VcrSites
 end
