@@ -116,12 +116,12 @@ module CrowdFundingParser
           result["data"]["support_person"]
         end
 
-        set_method :get_last_time do |result|
+        set_method :get_left_time do |result|
           result["data"]["remain_day"]
         end
 
-        set_method :get_status do |last_time|
-          if last_time == "0"
+        set_method :get_status do |left_time|
+          if left_time == "0"
             "finished"
           else
             "online"

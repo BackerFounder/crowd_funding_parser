@@ -69,16 +69,16 @@ module CrowdFundingParser
           doc.css(".projectInfo .table .numberOfPeople .inner strong").text
         end
 
-        set_method :get_last_time do |doc|
+        set_method :get_left_time do |doc|
           raw_string = doc.css(".projectInfo .table .time .inner").text.gsub(/\s/, "")
           match_data = raw_string.match(/(\d+).*(天|小時)/)
           match_data[1] + match_data[2]
         end
 
-        set_method :get_status do |last_time|
-          if last_time.match("集資中")
+        set_method :get_status do |left_time|
+          if left_time.match("集資中")
             "online"
-          elsif last_time.match("結束") || last_time.match("成功") || last_time.match(/\d+/).to_s == "0"
+          elsif left_time.match("結束") || left_time.match("成功") || left_time.match(/\d+/).to_s == "0"
             "finished"
           else
             "online"

@@ -1,4 +1,5 @@
 require 'httparty'
+require "active_support/all"
 require_relative "method_builder"
 
 module CrowdFundingParser
@@ -11,8 +12,8 @@ module CrowdFundingParser
         project["money_goal"]      = get_money_goal(result).to_i
         project["money_pledged"]   = get_money_pledged(result).to_i
         project["backer_count"]    = get_backer_count(result).to_i
-        project["last_time"]       = get_last_time(result)
-        project["status"]          = get_status(project["last_time"])
+        project["left_time"]       = get_left_time(result)
+        project["status"]          = get_status(project["left_time"])
         project["fb_count"]        = get_fb_count(result).to_i
         project["following_count"] = get_following_count(result).to_i
         project
@@ -37,7 +38,7 @@ module CrowdFundingParser
 
       def get_project_links(required_status = "online")
         links = []
-        
+
         get_lists.each do |target|
           doc = Nokogiri::HTML(target)
           online_projects = doc.css(@item_css_class)

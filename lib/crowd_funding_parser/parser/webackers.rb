@@ -67,16 +67,16 @@ module CrowdFundingParser
           get_string(doc.css(".tabbable li:nth-child(3) .badge.bg_no"))
         end
 
-        set_method :get_last_time do |doc|
+        set_method :get_left_time do |doc|
           time_string = get_string(doc.css("article:nth-child(4) .panel-body span:nth-child(2)"))
           last_seconds = (Time.parse(time_string) - Time.now)
           last_seconds <= 0 ? "已結束" : convert_time(last_seconds)
         end
 
-        set_method :get_status do |last_time|
-          if last_time.match("已結束") || last_time.match("已完成")
+        set_method :get_status do |left_time|
+          if left_time.match("已結束") || left_time.match("已完成")
             "finished"
-          elsif last_time.match("開始")
+          elsif left_time.match("開始")
             "preparing"
           else
             "online"
