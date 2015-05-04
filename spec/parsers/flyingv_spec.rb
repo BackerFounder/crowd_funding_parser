@@ -4,6 +4,9 @@ require 'spec_helper'
 describe CrowdFundingParser::Parser::Flyingv do
   let(:doc) { get_project_doc("https://www.flyingv.cc/project/41", "flyingv") }
 
+  it "gets project id" do
+    expect(subject.get_id("https://www.flyingv.cc/project/41")).to eq("41")
+  end
   it 'gets project title' do
     expect(subject.get_title(doc)).to eq('ch+u：超電能飛行腕錶')
   end
