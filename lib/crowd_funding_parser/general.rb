@@ -1,4 +1,5 @@
 require 'httparty'
+require "active_support/all"
 require_relative "method_builder"
 
 module CrowdFundingParser
@@ -37,7 +38,7 @@ module CrowdFundingParser
 
       def get_project_links(required_status = "online")
         links = []
-        
+
         get_lists.each do |target|
           doc = Nokogiri::HTML(target)
           online_projects = doc.css(@item_css_class)
