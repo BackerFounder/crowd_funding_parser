@@ -1,7 +1,7 @@
-nguage: ruby
+language: ruby
 cache: bundler
 
-rbenv:
+rvm:
   - 2.1.2
 
 script: 'bundle exec rspec'
@@ -13,5 +13,5 @@ notifications:
   email:
     recipients:
       - stan001212@gmail.com
-  on_failure: change
-  on_success: never
+    on_failure: change
+    on_success: never
