@@ -7,7 +7,9 @@ rbenv:
 script: 'bundle exec rspec'
 
 notifications:
-  slack: backer-founder:gS9GQrOqRKRogUEU5ajHYFZ9#crowd-trail
+  slack:
+    rooms:
+      - backer-founder:gS9GQrOqRKRogUEU5ajHYFZ9#crowd-trail
   email:
     recipients:
       - stan001212@gmail.com
