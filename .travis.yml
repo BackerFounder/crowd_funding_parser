@@ -4,9 +4,10 @@ cache: bundler
 rbenv:
   - 2.1.2
 
-script: 'bundle exec rake'
+script: 'bundle exec rspec'
 
 notifications:
+  slack: backer-founder:gS9GQrOqRKRogUEU5ajHYFZ9#crowd-trail
   email:
     recipients:
       - stan001212@gmail.com
