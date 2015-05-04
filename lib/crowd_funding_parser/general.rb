@@ -81,12 +81,12 @@ module CrowdFundingParser
         parse_content_data(result, project_url).merge parse_tracking_data(result, project_url)
       end
 
-      private
-
       def get_id(project_url)
         rel_url = get_rel_url(project_url)
         rel_url.split("/").last.split("?").first
       end
+
+      private
 
       def get_rel_url(url)
         url.gsub("#{@platform_url}", "")
