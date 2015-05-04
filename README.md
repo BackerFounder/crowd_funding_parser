@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/BackerFounder/crowd_funding_parser.svg)](https://travis-ci.org/BackerFounder/crowd_funding_parser)
+
 # CrowdFundingParser
 
 TODO: Write a gem description
