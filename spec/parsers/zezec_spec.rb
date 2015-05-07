@@ -34,6 +34,9 @@ describe CrowdFundingParser::Parser::Zeczec do
   it "gets region" do
     expect(subject.get_region(doc)).to eq('Taiwan')
   end
+  it "gets currency string" do
+    expect(subject.get_currency_string(doc)).to eq("twd")
+  end
   it "gets money goal" do
     expect(subject.get_money_goal(doc)).to eq('250006')
   end
