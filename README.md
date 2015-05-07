@@ -94,11 +94,9 @@ There should be 18 methods that need to be tested:
 
 ##### How to write a test
 
-First use `get_project_doc(campaign_page_url, platform_name)` to get test doc (please use a finished project).
-
-And set expectations as the project's data(use `""` if no data).
-
-Example spec is [flyingv_spec](https://github.com/BackerFounder/crowd_funding_parser/blob/master/spec/parsers/flyingv_spec.rb).
+1. Use `get_project_doc(campaign_page_url, platform_name)` to get test doc (please use a finished project).
+2. Set expectations as the project's attributes (use `""` if can't get that attribute).
+3. [Example spec](https://github.com/BackerFounder/crowd_funding_parser/blob/master/spec/parsers/flyingv_spec.rb).
 
 ##### How to run test
 
