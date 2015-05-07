@@ -22,7 +22,40 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+You can use it to get single project's attributes, listed below (sometimes just some of them):
+
+1. ```project id(platform_project_id)```
+2. ```title```
+3. ```category```
+4. ```creator_name```
+5. ```creator_id```
+6. ```creator_link```
+7. ```summary```
+8. ```start_date```
+9. ```end_date```
+10. ```region```
+11. ```currency_string```
+12. ```money_goal```
+13. ```money_pledged```
+14. ```backer_count```
+15. ```left_time```
+16. ```status```
+17. ```fb_count```
+18. ```following_count```
+
+by using:
+
+```ruby
+    flyingv_parser = CrowdFundingParser::Parser::Flyingv.new
+    project_data = flyingv_parser.get_project(PROJECT_URL)
+```
+
+Or you can use it to get all project's links, using
+
+```ruby
+    flyingv_parser = CrowdFundingParser::Parser::Flyingv.new
+    project_links = flyingv_parser.get_project_links(STATUS) # "finished" or "online"
+```
 
 ## Contributing
 
@@ -73,7 +106,7 @@ We use `Rspec` to run our test, so just run `bundle exec rspec`.
 Or you can run `bundle exec guard` to automatically run tests whenever you changed spec.
 
 
-#### Add Parser
+#### Add Parser(only deal with single project's data parsing)
 
 1. Place your parser in `lib/crowd_funding_parsers/parser`
 2. Naming your parser class after its platform's name
