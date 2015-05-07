@@ -71,3 +71,17 @@ Example spec is [flyingv_spec](https://github.com/BackerFounder/crowd_funding_pa
 
 We use `Rspec` to run our test, so just run `bundle exec rspec`.
 Or you can run `bundle exec guard` to automatically run tests whenever you changed spec.
+
+
+#### Add Parser
+
+1. Place your parser in `lib/crowd_funding_parsers/parser`
+2. Naming your parser class after its platform's name
+3. Write parser in `MethodBuilder.set_methods` block:
+
+  1. use `insert_parser` method to register your parser class in method_builder
+  2. use `set_variable` to set variables you need to use in parser methods, like `@platform_url`
+  3. use `set_method` to define method
+  4. if you need to use methods you set in method_builder, call it with `@parser` variable.
+
+4. [Example parser](https://github.com/BackerFounder/crowd_funding_parser/blob/master/lib/crowd_funding_parser/parser/flyingv.rb)
