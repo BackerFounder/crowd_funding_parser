@@ -36,6 +36,8 @@ TODO: Write usage instructions here
 
 #### 1. Add Test
 
+##### What to test
+
 There should be 18 methods that need to be tested:
 
 1. ```get_id```
@@ -56,3 +58,16 @@ There should be 18 methods that need to be tested:
 16. ```get_status```
 17. ```get_fb_count```
 18. ```get_following_count```
+
+##### How to write a test
+
+First use `get_project_doc(campaign_page_url, platform_name)` to get test doc (please use a finished project).
+
+And set expectations as the project's data(use `""` if no data).
+
+Example spec is [flyingv_spec](https://github.com/BackerFounder/crowd_funding_parser/blob/master/spec/parsers/flyingv_spec.rb).
+
+##### How to run test
+
+We use `Rspec` to run our test, so just run `bundle exec rspec`.
+Or you can run `bundle exec guard` to automatically run tests whenever you changed spec.
