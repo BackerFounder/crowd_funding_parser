@@ -20,7 +20,7 @@ module MethodBuilder
         rescue Exception => e
           puts "Error #{e.message}"
           puts e.backtrace.first
-          ""
+          nil
         end
       end
     end
