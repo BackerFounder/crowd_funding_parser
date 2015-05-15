@@ -1,7 +1,7 @@
 require "pry"
 require "vcr"
 require "crowd_funding_parser"
-require "support/vcr_sites"
+require "support/project_spec_support"
 require 'webmock/rspec'
 require "nokogiri"
 
@@ -11,5 +11,5 @@ VCR.configure do |config|
 end
 
 RSpec.configure do |config|
-  config.include VcrSites
+  config.include ProjectSpecSupport
 end

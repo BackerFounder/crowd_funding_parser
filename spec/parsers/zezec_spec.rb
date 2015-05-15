@@ -47,7 +47,7 @@ describe CrowdFundingParser::Parser::Zeczec do
     expect(subject.get_backer_count(doc)).to eq('586')
   end
   it "gets left_time" do
-    expect(subject.get_left_time(doc)).to eq('2 個月前')
+    expect(subject.get_left_time(doc)).to eq("#{get_month_distance(Time.parse('2015/01/05')) - 1} 個月前")
   end
   it "gets status" do
     left_time = subject.get_left_time(doc)
