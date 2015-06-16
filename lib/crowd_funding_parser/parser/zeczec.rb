@@ -9,7 +9,7 @@ module CrowdFundingParser
       end
 
       def get_lists
-        [HTTParty.get(@platform_url + "/categories")]
+        [HTTParty.get(@platform_url + "/categories", verify: false)]
       end
 
       MethodBuilder.set_methods do

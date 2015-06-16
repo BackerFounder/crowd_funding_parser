@@ -2,7 +2,7 @@ module CrowdFundingParser
   module Parser
     class Flyingv < General
       def initialize
-        @platform_url = "https://www.flyingv.cc"
+        @platform_url = "http://www.flyingv.cc"
         @item_css_class = ".portfolio-item"
         @status_css_class = ".unit-time"
       end
@@ -11,7 +11,7 @@ module CrowdFundingParser
         categories = ["designgoods", "media", "stageplay", "entertainment", "publish", "society", "technology", "food", "travel"]
         categories.map do |category|
           category_url = @platform_url + "/category/#{category}"
-          HTTParty.get(category_url)
+          HTTParty.get(category_url, verify: false)
         end
       end
 
@@ -19,7 +19,7 @@ module CrowdFundingParser
         insert_parser "Flyingv"
 
         set_variable do
-          @platform_url = "https://www.flyingv.cc"
+          @platform_url = "http://www.flyingv.cc"
           @time_regex = /(\d{4}\/\d{2}\/\d{2}).+(\d{4}\/\d{2}\/\d{2})/
         end
 

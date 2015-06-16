@@ -67,12 +67,12 @@ module CrowdFundingParser
       end
 
       def get_doc_through_url(project_url)
-        project_html = HTTParty.get(project_url)
+        project_html = HTTParty.get(project_url, verify: false)
         Nokogiri::HTML(project_html)
       end
 
       def get_json_through_url(project_url)
-        httparty_url = HTTParty.get(project_url)
+        httparty_url = HTTParty.get(project_url, verify: false)
         json = JSON.load(httparty_url.body)
       end
 

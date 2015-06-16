@@ -8,7 +8,7 @@ module CrowdFundingParser
       end
 
       def get_lists
-        [HTTParty.get(@platform_url + "/project-list.php")]
+        [HTTParty.get(@platform_url + "/project-list.php", verify: false)]
       end
 
       def get_id(project_url)
