@@ -33,6 +33,7 @@ module CrowdFundingParser
         project["start_date"]      = get_start_date(result)
         project["end_date"]        = get_end_date(result)
         project["region"]          = get_region(result)
+        project["cover_url"]       = get_cover(result)
         project
       end
 
@@ -74,6 +75,11 @@ module CrowdFundingParser
       def get_json_through_url(project_url)
         httparty_url = HTTParty.get(project_url, verify: false)
         json = JSON.load(httparty_url.body)
+      end
+
+      def get_json_obj_through_url(project_url)
+        httparty_url = HTTParty.get(project_url, verify: false)
+        obj = JSON.parse(httparty_url.body, object_class: OpenStruct)
       end
 
       def get_project(project_url)
