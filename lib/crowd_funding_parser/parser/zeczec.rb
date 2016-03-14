@@ -67,14 +67,14 @@ module CrowdFundingParser
         end
 
         set_method :get_money_goal do |doc|
-          puts "%:"
-          puts @parser.get_percentage(doc)
+          # puts @parser.get_percentage(doc)
           if @parser.get_percentage(doc) <= 100
             money_string(get_string(doc.css(".sidebar .project-notice strong:nth-child(2)"))).to_s
           else 
             money_pledged = @parser.get_money_pledged(doc).to_i
             percentage = @parser.get_percentage(doc)/100
             (money_pledged / percentage).to_i.to_s
+          end
         end
 
         set_method :get_backer_count do |doc|
