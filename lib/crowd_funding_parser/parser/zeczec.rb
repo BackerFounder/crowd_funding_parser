@@ -67,14 +67,20 @@ module CrowdFundingParser
         end
 
         set_method :get_money_goal do |doc|
-          money_pledged = @parser.get_money_pledged(doc).to_i
-          percentage = @parser.get_percentage(doc)/100
-          (money_pledged / percentage).to_i.to_s
+          puts "%:"
+          puts @parser.get_percentage(doc)
+          if @parser.get_percentage(doc) <= 100
+            money_string(get_string(doc.css(".sidebar .project-notice strong:nth-child(2)"))).to_s
+          else 
+            money_pledged = @parser.get_money_pledged(doc).to_i
+            percentage = @parser.get_percentage(doc)/100
+            (money_pledged / percentage).to_i.to_s
         end
 
         set_method :get_backer_count do |doc|
           link_regex = /projects\/.+\/backers/
-          backer_count_tab = doc.css(".project-menu .nav-tabs a").map do |tab|
+          # puts doc.css(".nav-tabs.project-menu a")
+          backer_count_tab = doc.css(".nav-tabs.project-menu a").map do |tab|
             tab if tab["href"].match(link_regex)
           end.compact[0]
           backer_count_tab.css("span").text
